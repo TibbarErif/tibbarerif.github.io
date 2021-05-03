@@ -1,0 +1,150 @@
+<!DOCTYPE html><html lang="zh-Hans"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="名为怪物的游戏——《星之魔女》FC小游戏移植（二）"><meta name="keywords" content="unity,开发技术"><meta name="author" content="火烧兔子"><meta name="copyright" content="火烧兔子"><title>名为怪物的游戏——《星之魔女》FC小游戏移植（二） | 火兔游戏工作室</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.9.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.9.0"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容:${query}"}},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  hexoVersion: '5.4.0'
+} </script><meta name="generator" content="Hexo 5.4.0"></head><body><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="切换文章详情">切换站点概览</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%94%BB%E5%87%BB%E4%BA%8B%E4%BB%B6"><span class="toc-number">2.</span> <span class="toc-text">攻击事件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%B6%E4%BD%9C%E5%AD%90%E5%BC%B9"><span class="toc-number">2.1.</span> <span class="toc-text">制作子弹</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%90%E5%BC%B9%E5%8F%91%E5%B0%84%E5%8F%A3"><span class="toc-number">2.2.</span> <span class="toc-text">子弹发射口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%89%E9%94%AE%E6%94%BB%E5%87%BB"><span class="toc-number">2.3.</span> <span class="toc-text">按键攻击</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E5%AD%90%E5%BC%B9"><span class="toc-number">2.4.</span> <span class="toc-text">生成子弹</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A8%E7%94%BB%E4%B8%A2%E5%A4%B1%E9%97%AE%E9%A2%98"><span class="toc-number">2.5.</span> <span class="toc-text">动画丢失问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%94%BB%E5%87%BB%E9%A2%91%E7%8E%87"><span class="toc-number">2.6.</span> <span class="toc-text">攻击频率</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%A9%E5%AD%90%E5%BC%B9%E9%A3%9E%EF%BC%81"><span class="toc-number">3.</span> <span class="toc-text">让子弹飞！</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%90%E5%BC%B9%E5%9F%BA%E7%B1%BB"><span class="toc-number">3.1.</span> <span class="toc-text">子弹基类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B5%B7%E9%A3%9E%E5%90%A7%EF%BC%8C%E5%AD%90%E5%BC%B9%EF%BC%81"><span class="toc-number">3.2.</span> <span class="toc-text">起飞吧，子弹！</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%90%E5%BC%B9%E6%B6%88%E5%A4%B1%E6%9C%AF"><span class="toc-number">3.3.</span> <span class="toc-text">子弹消失术</span></a></li></ol></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="https://i.loli.net/2021/05/02/JjR7MmfePax3oc2.jpg"></div><div class="author-info__name text-center">火烧兔子</div><div class="author-info__description text-center">我的世界，在你手中。</div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">文章</span><span class="pull-right">3</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">标签</span><span class="pull-right">3</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">分类</span><span class="pull-right">3</span></a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(https://i.loli.net/2021/05/02/61DLs9VHetxbq2n.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">火兔游戏工作室</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">首页</a><a class="site-page" href="/categories">分类</a><a class="site-page" href="/tags">标签</a><a class="site-page" href="/archives">归档</a></span><span class="pull-right"><a class="site-page social-icon search"><i class="fa fa-search"></i><span> 搜索</span></a></span></div><div id="post-info"><div id="post-title">名为怪物的游戏——《星之魔女》FC小游戏移植（二）</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-05-03</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/%E5%90%8D%E4%B8%BA%E6%80%AA%E7%89%A9%E7%9A%84%E6%B8%B8%E6%88%8F/">名为怪物的游戏</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/%E5%90%8D%E4%B8%BA%E6%80%AA%E7%89%A9%E7%9A%84%E6%B8%B8%E6%88%8F/%E5%88%B6%E4%BD%9C%E8%BF%87%E7%A8%8B/">制作过程</a></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>前面一篇文章实现了控制角色移动，今天开始实现角色的攻击动作，还有不同的状态转换。</p>
+<p>PS.贴代码太费时间了，后续的文章就简单介绍或者直接略过了。</p>
+<h2 id="攻击事件"><a href="#攻击事件" class="headerlink" title="攻击事件"></a>攻击事件</h2><p>玩家控制的小魔女可以发射「星之弹」攻击敌人。</p>
+<p>这是子弹的特写：</p>
+<p><img src="https://i.loli.net/2021/05/03/T34xrIR89U7YlXu.jpg" alt="QQ20210503-004833.jpg"></p>
+<p>演示效果（图片加载比较慢）：</p>
+<p><img src="https://files.catbox.moe/d1kake.gif" alt="子弹"></p>
+<p>静帧图：</p>
+<p><img src="https://files.catbox.moe/z7fu39.jpg" alt="子弹2"></p>
+<p>大致就是从手中发射星星弹攻击敌人。</p>
+<p>要实现角色发射子弹攻击，需要一连串的步骤，接下来就一步一步的进行说明。</p>
+<h3 id="制作子弹"><a href="#制作子弹" class="headerlink" title="制作子弹"></a>制作子弹</h3><p>因为子弹是动态生成的，所以把子弹做成一个 prefab（预制体）。</p>
+<p>放在 Resources/Prefabs/MiniGame 目录下备用，子弹还有很多种，这里就把星弹取名为：StarBullet。</p>
+<p><img src="https://files.catbox.moe/2wcsfw.jpg" alt="子弹3"></p>
+<h3 id="子弹发射口"><a href="#子弹发射口" class="headerlink" title="子弹发射口"></a>子弹发射口</h3><p>按下攻击键会发射子弹，按住攻击键会连续发射子弹。</p>
+<p>首先创建一个子弹发射的位置，这是一个看不见的透明物体（标红位置）：</p>
+<p><img src="https://files.catbox.moe/2033ns.jpg" alt="发射口"></p>
+<p>这个发射口位于角色节点底下，这样就会跟随角色转向而改变位置。</p>
+<h3 id="按键攻击"><a href="#按键攻击" class="headerlink" title="按键攻击"></a>按键攻击</h3><p>我们希望按下 <code>Z</code> 或 <code>J</code> 键来发射子弹，因此需要修改 unity 自带的按键指令：</p>
+<p><img src="https://files.catbox.moe/u3rzlr.jpg" alt="修改按键"></p>
+<p>找到 <code>Fire1</code>，别名需要指定两个按键，<code>negative button</code> 和 <code>postive button</code>，即消极的按钮和积极的按钮。</p>
+<p>当按下消极的按钮时，<code>GetAxis</code> 的值就会逐渐趋向于 -1，即负向增加；</p>
+<p>当按下积极按钮时，<code>GetAxis</code> 的值就会逐渐趋向于 1，即正向增加。</p>
+<p>对于攻击指令，只要判定 <code>GetAxis</code> 不等于 0 即玩家正在按攻击键。</p>
+<p>在 Player 脚本添加攻击按键监听：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">private void ShootEvent()</span><br><span class="line">&#123;</span><br><span class="line">    if (Input.GetAxisRaw(&quot;Fire1&quot;) !&#x3D; 0)</span><br><span class="line">    &#123;</span><br><span class="line">        Debug.Log(&quot;攻击&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">private void Update()</span><br><span class="line">&#123;</span><br><span class="line">    ShootEvent();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在按下攻击键只是在控制台打印“攻击”两个字，接下来要生成上面的子弹。</p>
+<h3 id="生成子弹"><a href="#生成子弹" class="headerlink" title="生成子弹"></a>生成子弹</h3><p>通过 <code>Resources</code> 方法动态加载预制体，然后再通过 <code>Instantiate</code> 生成游戏对象：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">private void CreateBullet()</span><br><span class="line">&#123;</span><br><span class="line">    GameObject prefab &#x3D; Resources.Load(&quot;Prefabs&#x2F;MiniGame&#x2F;StarBullet&quot;) as GameObject;</span><br><span class="line">    GameObject bulletObj &#x3D; Instantiate(prefab, firePoint.transform);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后修改 <code>ShootEvent</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">private void ShootEvent()</span><br><span class="line">&#123;</span><br><span class="line">    if (Input.GetAxisRaw(&quot;Fire1&quot;) !&#x3D; 0)</span><br><span class="line">    &#123;</span><br><span class="line">        CreateBullet();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>演示效果：</p>
+<p><img src="https://files.catbox.moe/ob6aph.gif" alt="攻击1"></p>
+<p>可以看到子弹好像“粘在”角色身上，这是因为指定了 <code>FirePoint</code> 作为子弹的父节点，而 <code>FirePoint</code> 又挂在 <code>Player</code> 下面，子节点肯定是随着父节点改变位置了。</p>
+<p>解决方法就是把子弹添加到背景：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 游戏场景</span><br><span class="line">protected GameObject bg;</span><br><span class="line"></span><br><span class="line">private void Awake()</span><br><span class="line">&#123;</span><br><span class="line">    &#x2F;&#x2F; ... 找到背景对象</span><br><span class="line">    bg &#x3D; GameObject.Find(&quot;Background&quot;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">private void CreateBullet()</span><br><span class="line">&#123;</span><br><span class="line">    GameObject prefab &#x3D; Resources.Load(&quot;Prefabs&#x2F;MiniGame&#x2F;StarBullet&quot;) as GameObject;</span><br><span class="line">    GameObject bulletObj &#x3D; Instantiate(prefab, firePoint.transform);</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; 生成子弹后，修改子弹的父节点为游戏场景（背景）</span><br><span class="line">    bulletObj.transform.SetParent(bg.transform);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>修改完成后，再次测试效果：</p>
+<p><img src="https://files.catbox.moe/h2q9qk.gif" alt="攻击2"></p>
+<p>这回子弹的位置正常了，但又发现新的问题——可以看到角色移动时没有播放奔跑动画！</p>
+<h3 id="动画丢失问题"><a href="#动画丢失问题" class="headerlink" title="动画丢失问题"></a>动画丢失问题</h3><p>这是因为 <code>MiniGame_Player</code> 脚本继承了 <code>MiniGame_Character</code>，而动画事件的监听是在父类，现在又在子类重写了 <code>Update</code> 方法，导致父类的动画监听事件没了。</p>
+<p>解决方法就是把父类的 <code>Update</code> 声明为虚方法（virtual），访问修饰符为 <code>protected</code> 可以让子类调用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">protected virtual void Update()</span><br><span class="line">&#123;</span><br><span class="line">    PlayAnimateListerner();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接着修改 Player 脚本的 Update 方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">protected override void Update()</span><br><span class="line">&#123;</span><br><span class="line">    &#x2F;&#x2F; 调用父类的方法</span><br><span class="line">    base.Update();</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; 射击事件</span><br><span class="line">    ShootEvent();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后重新测试一次：</p>
+<p><img src="https://files.catbox.moe/6gpze2.gif" alt="攻击4"></p>
+<p>我们的女主角终于能快乐的奔跑同时“划出许多星星”了……？！</p>
+<h3 id="攻击频率"><a href="#攻击频率" class="headerlink" title="攻击频率"></a>攻击频率</h3><p>新的问题又出现了，按一下攻击键就生成那么多子弹，甚至造成了卡顿现象。</p>
+<p>子弹的发射应该有限制，比如按住攻击键 0.25s 发射一颗，即存在「攻击间隔」，也可以理解为『攻击速度』。</p>
+<p>原理与前一篇写的动画事件一样，就不再赘述了。</p>
+<p>修改后的效果如下：</p>
+<p><img src="https://files.catbox.moe/5a7utg.gif" alt="攻击5"></p>
+<p>看起来像有频率的进行“划水”了。</p>
+<h2 id="让子弹飞！"><a href="#让子弹飞！" class="headerlink" title="让子弹飞！"></a>让子弹飞！</h2><p>现在的攻击只是生出一颗子弹，但是这个子弹就像一张图片一样一动不动。</p>
+<p>接下来要让子弹能够向前飞行。</p>
+<h3 id="子弹基类"><a href="#子弹基类" class="headerlink" title="子弹基类"></a>子弹基类</h3><p>除了小魔女发射的「星弹」之外，敌人也会发射各种子弹。</p>
+<p>子弹都有共通之处，所以现在新建一个子弹的基类 <code>MiniGame_Bullet</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">using System.Collections;</span><br><span class="line">using System.Collections.Generic;</span><br><span class="line">using UnityEngine;</span><br><span class="line"></span><br><span class="line">public abstract class MiniGame_Bullet : MonoBehaviour</span><br><span class="line">&#123;</span><br><span class="line">    public float damage;</span><br><span class="line"></span><br><span class="line">    [HideInInspector]</span><br><span class="line">    public MiniGame_Character attacker;</span><br><span class="line"></span><br><span class="line">    protected abstract void MoveEvent();</span><br><span class="line"></span><br><span class="line">    protected void Update()</span><br><span class="line">    &#123;</span><br><span class="line">        MoveEvent();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>所有的子弹都有伤害值，以及攻击者，并且需要在子类实现子弹的移动逻辑。</p>
+<p>将 attacker 字段设置为 public 方便赋值，同时再设置 <code>HideInInspector</code> 就可以让 attacker 字段不在属性面板显示了。</p>
+<h3 id="起飞吧，子弹！"><a href="#起飞吧，子弹！" class="headerlink" title="起飞吧，子弹！"></a>起飞吧，子弹！</h3><p>新建一个星弹的脚本 <code>MiniGame_StarBullet</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">using System.Collections;</span><br><span class="line">using System.Collections.Generic;</span><br><span class="line">using UnityEngine;</span><br><span class="line"></span><br><span class="line">public class MiniGame_StarBullet : MiniGame_Bullet</span><br><span class="line">&#123;</span><br><span class="line">    public float speed;</span><br><span class="line">    private float direct;</span><br><span class="line"></span><br><span class="line">    private void Start()</span><br><span class="line">    &#123;</span><br><span class="line">        direct &#x3D; attacker.transform.localScale.x;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    protected override void MoveEvent()</span><br><span class="line">    &#123;</span><br><span class="line">        var pos &#x3D; transform.position;</span><br><span class="line">        pos.x +&#x3D; speed * Time.deltaTime * direct;</span><br><span class="line"></span><br><span class="line">        transform.position &#x3D; pos;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>星弹的逻辑比较简单，根据玩家的朝向向前直线移动。</p>
+<p>然后把脚本挂在星弹的预制体上，并且将子弹的速度设置为 1500，伤害值设置为 1。</p>
+<p>然后再修改 Player 发射子弹的方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">private void CreateBullet()</span><br><span class="line">&#123;</span><br><span class="line">    GameObject prefab &#x3D; Resources.Load(&quot;Prefabs&#x2F;MiniGame&#x2F;StarBullet&quot;) as GameObject;</span><br><span class="line">    GameObject bulletObj &#x3D; Instantiate(prefab, firePoint.transform);</span><br><span class="line">    bulletObj.transform.SetParent(bg.transform);</span><br><span class="line"></span><br><span class="line">    MiniGame_Bullet bullet &#x3D; bulletObj.GetComponent&lt;MiniGame_Bullet&gt;();</span><br><span class="line">    bullet.attacker &#x3D; this;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在发射子弹的时候，将 this 赋值给子弹的 attacker，这样这颗子弹的主人就是主角了。</p>
+<p>然后打开调试场景测试效果：</p>
+<p><img src="https://i.loli.net/2021/05/03/3iXnzk9oZtYsIeG.gif" alt="Kapture 2021-05-03 at 9.46.27.gif"></p>
+<p>看起来已经没问题了，但是……新的问题果然又来了。</p>
+<p>打开调试窗口可以发现，发射出去的子弹并没有消失，而是继续一直往前飞行，仍然残留在游戏内：</p>
+<p><img src="https://i.loli.net/2021/05/03/4IegDpaqQmfJyEU.gif" alt="Kapture 2021-05-03 at 9.56.18.gif"></p>
+<h3 id="子弹消失术"><a href="#子弹消失术" class="headerlink" title="子弹消失术"></a>子弹消失术</h3><p>不管玩家的电脑有多大的内存，也扛不住无限生成的子弹。</p>
+<p>因此在达到某种条件的时候，应该让子弹“消失”。</p>
+<p>有几个方案：</p>
+<ul>
+<li>子弹创建 3 秒后自动销毁</li>
+<li>子弹飞行距离达到某个值后自动销毁</li>
+<li>子弹离开屏幕后消失</li>
+</ul>
+<p>第①个方法和第②个方法实际原理是差不多的，飞行 3 秒后消失，因为子弹的速度是恒定的，所以运动时间相同移动距离也相同。</p>
+<p>所以有两种方法让子弹消失：①根据飞行距离 ②判定子弹是否离开屏幕</p>
+<p>如果子弹的飞行距离过短，这样玩家就必须贴脸输出，明明是远程攻击最后却还要拉近距离……</p>
+<p>个人感觉体验不好，所以我决定用第二种方法，这也是大多数 FC 游戏的做法，即子弹离开屏幕时才会消失。</p>
+<p><img src="https://files.catbox.moe/2odcjn.jpg" alt="场景示意图"></p>
+<p>上图是玩家在游戏场景按键攻击的示意图，当子弹飞出屏幕外的时候，即要进行销毁。</p>
+<p>常规方法是像这样在游戏场景外生成一片区域，子弹撞到这个区域就会自动销毁。</p>
+<p><img src="https://i.loli.net/2021/05/03/ROuA597oyzKlmwf.jpg" alt="QQ20210503-102015.jpg"></p>
+<p>但是还有一种反其道而行之的方法，即把碰撞检测区域放在游戏场景内，改成监听子弹离开这片区域。</p>
+<p><img src="https://i.loli.net/2021/05/03/zhknjHylax47vU3.jpg" alt="QQ20210503-102429.jpg"></p>
+<p>第二种方法更好，第一种方法碰撞检测区域不规则，而且子弹的大小形态各异。</p>
+<p><img src="https://i.loli.net/2021/05/03/vsYMqT4eRylfr2w.jpg" alt="QQ20210503-103608.jpg"></p>
+<p>体积比较大的子弹在碰到红色边框的时候就消失了，观感很奇怪。</p>
+<p>所以这里采用第二种方法来实现。</p>
+<p>unity 中要实现碰撞检测，其中一方必须是“刚体”，且双方都必须包含碰撞体组件，刚体是物理组件。</p>
+<p>这里又面临着一个选择：①刚体组件挂在子弹上面 ②刚体组件挂在区域检测器和敌人身上</p>
+<p>当然是选择②，因为子弹的数量远比敌人多，创建组件需要耗费性能，而且刚体组件本身也会耗费性能。</p>
+<p>把刚体加在子弹上面明显是不理智的选择，子弹只需要添加碰撞体并且设置为触发器即可。</p>
+<p>首先在游戏场景创建一个空白物体 SceneArea，分辨率设置为屏幕大小：1280 * 720。</p>
+<p>然后给这个物体添加 <code>Rigidbody 2D</code> 组件（2D刚体），然后再添加 <code>Box Collider 2D</code> 组件（2D 盒型碰撞体）。</p>
+<p>如图所示：</p>
+<p><img src="https://i.loli.net/2021/05/03/1rHFbAJKi9EvaTc.jpg" alt="QQ20210503-155245.jpg"></p>
+<p>这里的 <code>Body Type</code> 应该设置为 <code>Dynamic</code>（动态的）这样才能与触发器产生碰撞检测。</p>
+<p>因此还需要修改刚体组件的 <code>Gravity Scale</code> 为 0，即让它不受重力影响。</p>
+<p>不然开始测试的时候这个区域就会因为重力掉下去，导致测不出来。</p>
+<p><code>Simulated</code> 默认是勾选的，此处保持勾选状态，此选项是设置刚体是否模拟物理效果，如果取消勾选则检测不出碰撞。</p>
+<p>场景区域这样就设置完毕了，现在虽然可以产生碰撞，但是还未对碰撞事件做出处理。</p>
+<p>新建脚本 <code>MiniGame_SceneArea</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">using System.Collections;</span><br><span class="line">using System.Collections.Generic;</span><br><span class="line">using UnityEngine;</span><br><span class="line"></span><br><span class="line">public class MiniGame_SceneArea : MonoBehaviour</span><br><span class="line">&#123;</span><br><span class="line">    private void OnTriggerExit2D(Collider2D collision)</span><br><span class="line">    &#123;</span><br><span class="line">        Debug.Log(collision.gameObject.name + &quot;离开场景&quot;);</span><br><span class="line"></span><br><span class="line">        string tag &#x3D; collision.gameObject.tag;</span><br><span class="line"></span><br><span class="line">        switch (tag)</span><br><span class="line">        &#123;</span><br><span class="line">            case &quot;Bullet&quot;:</span><br><span class="line">                BulletEvent(collision);</span><br><span class="line">                break;</span><br><span class="line">            case &quot;Enemy&quot;:</span><br><span class="line">                break;</span><br><span class="line">            case &quot;Item&quot;:</span><br><span class="line">                break;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private void BulletEvent(Collider2D collision)</span><br><span class="line">    &#123;</span><br><span class="line">        Destroy(collision.gameObject);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里监听 <code>OnTriggerExit2D</code> 事件，需要注意的是 unity 还有一个类似的碰撞检测事件 <code>OnCollisionExit</code>。</p>
+<p><code>Trigger</code>（触发器） 和 <code>Collision</code>（碰撞体）的碰撞回调方法是不一样的。</p>
+<p>因为我将子弹视为触发器，所以要用 <code>Trigger</code> 作为碰撞的回调方法，当子弹离开这个区域的时候就会触发 <code>OnTriggerExit2D</code> 回调。</p>
+<p><code>OnTriggerExit2D</code> 回调方法会根据物体的 <code>tag</code>（标签）来判断物体属于哪种类型。</p>
+<p>因为不仅仅是子弹会在离开屏幕时消失，道具、敌人之类的也会在离开视野范围内消除，所以这里设置通过标签来区分。</p>
+<p>其实全部只要触发 <code>Destroy</code> 销毁事件即可，但是在这里区分物体的种类，还可以计算「物品搜集率」、「怪物击败率」等等，完美通关还能弄个成就什么的。</p>
+<p>接下来设置子弹，同样是给子弹加上一个碰撞体，这里选择圆形碰撞体 <code>Circle Collider 2D</code>，并且设置好半径，然后把 <code>Is Trigger</code> 勾选。</p>
+<p><img src="https://i.loli.net/2021/05/03/m75TWwFX9c3Ci2f.jpg" alt="QQ20210503-153200.jpg"></p>
+<p>然后点击属性面板 <code>Inspector</code> 顶部的 <code>Tag</code>，新增一个 <code>Bullet</code> 标签，然后将子弹设置为该标签。</p>
+<p><img src="https://i.loli.net/2021/05/03/WjCBiDguzGR72My.jpg" alt="QQ20210503-155517.jpg"></p>
+<p>接下来修改调试场景的配置，场景像素配置修改为 <code>Free Aspect</code>，再把 <code>Maximize On Play</code>（最大化）点亮。</p>
+<p><img src="https://i.loli.net/2021/05/03/xFUiO4JTQPWncEz.jpg" alt="QQ20210503-160354.jpg"></p>
+<p>这样就可以看到屏幕摄像机拍不到的地方了，然后进入调试场景测试：</p>
+<p><img src="https://i.loli.net/2021/05/03/1dzFQIGHKsuYgZT.gif" alt="Kapture 2021-05-03 at 16.04.59.gif"></p>
+<p>可以看到子弹离开游戏区域（深色）时就会被自动销毁了。</p>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">火烧兔子</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://huotuyouxi.com/2021/05/03/monster-game-2/">http://huotuyouxi.com/2021/05/03/monster-game-2/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://huotuyouxi.com">火兔游戏工作室</a>！</span></div></div><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/unity/">unity</a><a class="post-meta__tags" href="/tags/%E5%BC%80%E5%8F%91%E6%8A%80%E6%9C%AF/">开发技术</a></div><nav id="pagination"><div class="next-post pull-right"><a href="/2021/05/02/monster-game-1/"><span>名为怪物的游戏——《星之魔女》FC小游戏移植（一）</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer class="footer-bg" style="background-image: url(https://i.loli.net/2021/05/02/61DLs9VHetxbq2n.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2020 - 2021 By 火烧兔子</div><div class="framework-info"><span>驱动 - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.9.0"></script><script src="/js/fancybox.js?version=1.9.0"></script><script src="/js/sidebar.js?version=1.9.0"></script><script src="/js/copy.js?version=1.9.0"></script><script src="/js/fireworks.js?version=1.9.0"></script><script src="/js/transition.js?version=1.9.0"></script><script src="/js/scroll.js?version=1.9.0"></script><script src="/js/head.js?version=1.9.0"></script><script src="/js/search/local-search.js"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章"></div></div></div><hr><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a target="_blank" rel="noopener" href="https://github.com/wzpan/hexo-generator-search" style="color:#49B1F5;">hexo-generator-search</a>
+ <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fa fa-times"></i></span></div><div class="search-mask"></div></body></html>
