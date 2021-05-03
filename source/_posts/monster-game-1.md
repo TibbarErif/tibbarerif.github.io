@@ -35,9 +35,10 @@ categories:
 <iframe src="//player.bilibili.com/player.html?aid=89983856&bvid=BV167411L7vJ&cid=153683294&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
 
 ## 移植过程
+文章会包含制作过程的技术相关内容，如果有兴趣的小伙伴可以了解一下。
 
 ### 素材导入
-由于之前已经做完了，所以素材可以直接导入。
+由于之前小游戏已经做完了，所以素材可以直接导入。
 
 像素风的序列帧：
 
@@ -364,7 +365,15 @@ public class MiniGame_MoveEvent : MonoBehaviour
 
 监听按键的方法改成 `GetAxis`，这个方法会返回 -1~1的浮点数，
 
-这样还可以让角色有一个起跑短暂加速的感觉，而且在松开按键的时候，也会有缓冲效果。
+`Horizontal` 是 unity 内置的常量，对应水平方向相关的按键，即左右方向键和 WASD。
+
+所有的常量及对应的按键参数可以在构建游戏时，Player Settings 里查看：
+
+![QQ20210503-002740.jpg](https://i.loli.net/2021/05/03/P4FR6JSWa3giLmK.jpg)
+
+这些常量有一个好处就是可以支持手柄操作。
+
+因为 `GetAxis` 会返回一个范围值，而且是渐进式的增加，这样还可以让角色有一个起跑短暂加速的感觉，在松开按键的时候，也会有缓冲减速效果。
 
 修改后的演示效果：
 
