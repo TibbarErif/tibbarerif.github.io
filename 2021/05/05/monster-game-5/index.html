@@ -1,0 +1,165 @@
+<!DOCTYPE html><html lang="zh-Hans"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="名为怪物的游戏——《星之魔女》FC小游戏移植（五）"><meta name="keywords" content="unity,开发技术"><meta name="author" content="火烧兔子"><meta name="copyright" content="火烧兔子"><title>名为怪物的游戏——《星之魔女》FC小游戏移植（五） | 火兔游戏工作室</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.9.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.9.0"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容:${query}"}},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  hexoVersion: '5.4.0'
+} </script><meta name="generator" content="Hexo 5.4.0"></head><body><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="切换文章详情">切换站点概览</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%94%BB%E5%87%BB%E7%B3%BB%E7%BB%9F"><span class="toc-number">2.</span> <span class="toc-text">攻击系统</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%94%BB%E5%87%BB%E4%BA%8B%E4%BB%B6"><span class="toc-number">2.1.</span> <span class="toc-text">攻击事件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9A%E4%BD%93%E7%A2%B0%E6%92%9E%E9%97%AE%E9%A2%98"><span class="toc-number">2.2.</span> <span class="toc-text">刚体碰撞问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%90%E5%BC%B9%E5%AE%9E%E4%BE%8B"><span class="toc-number">2.3.</span> <span class="toc-text">子弹实例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%92%E8%89%B2%E5%8A%A8%E7%94%BB"><span class="toc-number">3.</span> <span class="toc-text">角色动画</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BE%85%E6%9C%BA%E5%8A%A8%E7%94%BB"><span class="toc-number">3.1.</span> <span class="toc-text">待机动画</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A5%94%E8%B7%91%E5%8A%A8%E7%94%BB"><span class="toc-number">3.2.</span> <span class="toc-text">奔跑动画</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A5%94%E8%B7%91%E6%94%BB%E5%87%BB%E5%8A%A8%E7%94%BB"><span class="toc-number">3.3.</span> <span class="toc-text">奔跑攻击动画</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%94%BB%E5%87%BB%E5%8A%A8%E7%94%BB"><span class="toc-number">3.4.</span> <span class="toc-text">攻击动画</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%97%E4%BC%A4%E5%8A%A8%E7%94%BB"><span class="toc-number">3.5.</span> <span class="toc-text">受伤动画</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%80%92%E4%B8%8B%E5%8A%A8%E7%94%BB"><span class="toc-number">3.6.</span> <span class="toc-text">倒下动画</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%AA%E5%AE%8C%E6%88%90%E5%8A%A8%E7%94%BB"><span class="toc-number">3.7.</span> <span class="toc-text">未完成动画</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8A%B6%E6%80%81%E8%BD%AC%E6%8D%A2"><span class="toc-number">4.</span> <span class="toc-text">状态转换</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E7%8A%B6%E6%80%81"><span class="toc-number">4.1.</span> <span class="toc-text">初始状态</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BE%85%E6%9C%BA-%E5%A5%94%E8%B7%91"><span class="toc-number">4.2.</span> <span class="toc-text">待机-奔跑</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BE%85%E6%9C%BA-%E6%94%BB%E5%87%BB"><span class="toc-number">4.3.</span> <span class="toc-text">待机-攻击</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A5%94%E8%B7%91-%E5%A5%94%E8%B7%91%E6%94%BB%E5%87%BB"><span class="toc-number">4.4.</span> <span class="toc-text">奔跑-奔跑攻击</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%AA%E5%AE%8C%E6%88%90%E5%8A%A8%E7%94%BB-1"><span class="toc-number">4.5.</span> <span class="toc-text">未完成动画</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8E%E8%A8%80"><span class="toc-number">5.</span> <span class="toc-text">后言</span></a></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="https://i.loli.net/2021/05/02/JjR7MmfePax3oc2.jpg"></div><div class="author-info__name text-center">火烧兔子</div><div class="author-info__description text-center">我的世界，在你手中。</div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">文章</span><span class="pull-right">6</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">标签</span><span class="pull-right">3</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">分类</span><span class="pull-right">3</span></a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(https://i.loli.net/2021/05/02/61DLs9VHetxbq2n.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">火兔游戏工作室</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">首页</a><a class="site-page" href="/categories">分类</a><a class="site-page" href="/tags">标签</a><a class="site-page" href="/archives">归档</a></span><span class="pull-right"><a class="site-page social-icon search"><i class="fa fa-search"></i><span> 搜索</span></a></span></div><div id="post-info"><div id="post-title">名为怪物的游戏——《星之魔女》FC小游戏移植（五）</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-05-05</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/%E5%90%8D%E4%B8%BA%E6%80%AA%E7%89%A9%E7%9A%84%E6%B8%B8%E6%88%8F/">名为怪物的游戏</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/%E5%90%8D%E4%B8%BA%E6%80%AA%E7%89%A9%E7%9A%84%E6%B8%B8%E6%88%8F/%E5%88%B6%E4%BD%9C%E8%BF%87%E7%A8%8B/">制作过程</a></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>unity 自带了一套动画系统，还内置了“状态机”。</p>
+<p>状态机是一种可以实现不同状态之间互相转换的机制。</p>
+<p>本篇开始制作角色的攻击动作以及其他一些动画。</p>
+<p>unity 的动画系统比起 cocos 复杂很多，在网上没找到比较好的教程，因此决定自己看官方文档。</p>
+<p>官方文档：<a target="_blank" rel="noopener" href="https://docs.unity3d.com/cn/2020.3/Manual/AnimationSection.html">https://docs.unity3d.com/cn/2020.3/Manual/AnimationSection.html</a></p>
+<h2 id="攻击系统"><a href="#攻击系统" class="headerlink" title="攻击系统"></a>攻击系统</h2><p>制作动画之前，要先把角色的攻击功能做出来。</p>
+<h3 id="攻击事件"><a href="#攻击事件" class="headerlink" title="攻击事件"></a>攻击事件</h3><p>前文写的方法是通过按键实现连发攻击。</p>
+<p>现在为了让手感更加丝滑，改成按一下攻击键就发射一颗子弹。</p>
+<p>使用 <code>GetButtonDown</code> 来监听玩家按下攻击键：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">private void PressedKey()</span><br><span class="line">&#123;</span><br><span class="line">    horizontal &#x3D; Input.GetAxis(&quot;Horizontal&quot;);</span><br><span class="line"></span><br><span class="line">    if (Input.GetButtonDown(&quot;Jump&quot;) &amp;&amp; isGround)</span><br><span class="line">    &#123;</span><br><span class="line">        jumpPressed &#x3D; true;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; 新增</span><br><span class="line">    if (Input.GetButtonDown(&quot;Fire1&quot;))</span><br><span class="line">    &#123;</span><br><span class="line">        Shoot();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后编写 <code>Shoot</code> 方法，在这里创建子弹：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">private void Shoot()</span><br><span class="line">&#123;</span><br><span class="line">    GameObject prefab &#x3D; Resources.Load(&quot;Prefabs&#x2F;MiniGame&#x2F;StarBullet&quot;) as GameObject;</span><br><span class="line">    GameObject bulletObj &#x3D; Instantiate(prefab, firePoint);</span><br><span class="line"></span><br><span class="line">    MiniGame_Bullet bullet &#x3D; bulletObj.GetComponent&lt;MiniGame_Bullet&gt;();</span><br><span class="line">    bullet.attacker &#x3D; this;</span><br><span class="line"></span><br><span class="line">    bulletObj.transform.SetParent(bg);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样按键攻击的功能就完成了。</p>
+<p>演示效果：</p>
+<p><img src="https://files.catbox.moe/tszeso.gif" alt="按键射击"></p>
+<p>这里的子弹以及如何让子弹飞离屏幕就消失，前面发的博文已经有介绍了，故不再重复说明。</p>
+<h3 id="刚体碰撞问题"><a href="#刚体碰撞问题" class="headerlink" title="刚体碰撞问题"></a>刚体碰撞问题</h3><p>因为现在使用了物理系统，所以之前使用的区域检测法让子弹消失会出现问题。</p>
+<p>如下图：</p>
+<p><img src="https://files.catbox.moe/osp1cd.jpg" alt="内部碰撞"></p>
+<p>这是刚体和刚体之间会发生碰撞，产生物理效果。</p>
+<p>虽然碰撞区域移除了重力影响，但现在这个场景里面，角色身上有刚体组件，地板也有刚体组件，这样必然会触发物理系统，结果就是碰撞区域发生了偏移。</p>
+<p>因为我已经把角色的操控系统改成用物理效果来实现了，原理已经不同了。</p>
+<p>现在不能让碰撞区域作为刚体，而是要让子弹、敌人和玩家作为刚体，区域检测器设置为触发器。</p>
+<p>尽管让子弹加上刚体会影响性能，但至少要先把功能实现了再说，如果出现卡顿现象，到时候再想办法优化。</p>
+<p>（这个小游戏不是弹幕游戏，应该不至于会出现性能问题）</p>
+<h3 id="子弹实例"><a href="#子弹实例" class="headerlink" title="子弹实例"></a>子弹实例</h3><p>移除碰撞区域的刚体，并设置为 Trigger，这样碰撞区域就是一个触发器了。</p>
+<p>再给子弹加上 2D 刚体组件。</p>
+<p>修改原来子弹代码移动逻辑，改成用外力进行推动而不是直接修改坐标，与控制角色的代码一样。</p>
+<p>在父类中获得刚体组件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">using System.Collections;</span><br><span class="line">using System.Collections.Generic;</span><br><span class="line">using UnityEngine;</span><br><span class="line"></span><br><span class="line">public abstract class MiniGame_Bullet : MonoBehaviour</span><br><span class="line">&#123;</span><br><span class="line">    public float damage;</span><br><span class="line"></span><br><span class="line">    [HideInInspector]</span><br><span class="line">    public MiniGame_Character attacker;</span><br><span class="line"></span><br><span class="line">    protected Rigidbody2D rb;</span><br><span class="line"></span><br><span class="line">    private void Awake()</span><br><span class="line">    &#123;</span><br><span class="line">        rb &#x3D; GetComponent&lt;Rigidbody2D&gt;();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    protected abstract void MoveEvent();</span><br><span class="line"></span><br><span class="line">    protected void Update()</span><br><span class="line">    &#123;</span><br><span class="line">        MoveEvent();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后修改子类的移动逻辑：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">using System.Collections;</span><br><span class="line">using System.Collections.Generic;</span><br><span class="line">using UnityEngine;</span><br><span class="line"></span><br><span class="line">public class MiniGame_StarBullet : MiniGame_Bullet</span><br><span class="line">&#123;</span><br><span class="line">    public float speed &#x3D; 1000f;</span><br><span class="line">    private float direct;</span><br><span class="line"></span><br><span class="line">    private void Start()</span><br><span class="line">    &#123;</span><br><span class="line">        direct &#x3D; attacker.transform.localScale.x;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    protected override void MoveEvent()</span><br><span class="line">    &#123;</span><br><span class="line">        rb.velocity &#x3D; new Vector2(speed * direct, rb.velocity.y);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>测试效果：</p>
+<p><img src="https://files.catbox.moe/0l2djk.gif" alt="子弹消失"></p>
+<p>可以看到，子弹离开边界的时候已经被销毁了。</p>
+<h2 id="角色动画"><a href="#角色动画" class="headerlink" title="角色动画"></a>角色动画</h2><p>为了方便观察动画效果，先调整一下 unity 引擎的界面布局。</p>
+<p><img src="https://files.catbox.moe/wpdw8j.jpg" alt="unity 布局调整"></p>
+<p>接下来就可以开始制作动画了。</p>
+<p>在 Assets 目录下创建一个 Animations 文件夹用来存放动画，依次创建 MiniGame、Player 子文件夹。</p>
+<p>这里有个比较坑爹的地方，我用的 2021 版 unity 默认会把动画的播放间隔参数隐藏起来。</p>
+<p>如下图：</p>
+<p><img src="https://files.catbox.moe/t2bkg3.jpg" alt="动画界面"></p>
+<p>其实只要点开界面的右上方，选择更多，在弹出的菜单中再选择 <code>ShowSampleRate</code>：</p>
+<p><img src="https://files.catbox.moe/vgl65s.jpg" alt="showSampleRate"></p>
+<p>勾选以后，就可以在动画界面看到设定帧数的输入框了，默认值是 60，也就是说 1 秒钟有 60 帧：</p>
+<p><img src="https://files.catbox.moe/g48voy.jpg" alt="帧数设置"></p>
+<p>实际上我们没有那么多的素材能用，一般也就几帧而已，每帧对应一张图片素材。</p>
+<h3 id="待机动画"><a href="#待机动画" class="headerlink" title="待机动画"></a>待机动画</h3><p>待机动画是角色静止不动时的动作。</p>
+<p>动画是女主角眨眼的动作，这个动画只播放一次，不循环。</p>
+<p>完整动作只有 4 张素材，也就是把眼睛闭上的动作。</p>
+<p>睁眼的动作其实就反过来倒序播放而已。</p>
+<p>顺序播放：1234321，一共有 7 帧。</p>
+<p>60 / 7 = 8.5，因此这里可以四舍五入取 9 作为帧数，即将 1 秒钟划分成 9 份。</p>
+<p>演示效果：</p>
+<p><img src="https://files.catbox.moe/6c0sgn.gif" alt="待机动画"></p>
+<p>动画默认是循环播放的，我们这个待机效果只要播放一次就够。</p>
+<p>找到刚才存放动画的文件：</p>
+<p><img src="https://files.catbox.moe/4sewgq.jpg" alt="待机动画文件"></p>
+<p>双击选中，然后在右侧的属性面板中把 <code>Loop Time</code> 的勾去掉即可：</p>
+<p><img src="https://files.catbox.moe/c9b7b4.jpg" alt="动画属性"></p>
+<h3 id="奔跑动画"><a href="#奔跑动画" class="headerlink" title="奔跑动画"></a>奔跑动画</h3><p>继续制作奔跑动画，创建新的动画然后把素材拖进去：</p>
+<p><img src="https://files.catbox.moe/xlkzmh.gif" alt="奔跑动画"></p>
+<p>奔跑的动画是循环的，所以不需要调整。</p>
+<h3 id="奔跑攻击动画"><a href="#奔跑攻击动画" class="headerlink" title="奔跑攻击动画"></a>奔跑攻击动画</h3><p>角色一边奔跑一边按攻击键，也有独立的动画。</p>
+<p>直接将素材拖进去即可：</p>
+<p><img src="https://files.catbox.moe/zqdfm6.gif" alt="奔跑攻击"></p>
+<h3 id="攻击动画"><a href="#攻击动画" class="headerlink" title="攻击动画"></a>攻击动画</h3><p>攻击动画只有一张素材，也拖进去即可。</p>
+<p><img src="https://files.catbox.moe/5qsyf4.jpg" alt="攻击动画"></p>
+<h3 id="受伤动画"><a href="#受伤动画" class="headerlink" title="受伤动画"></a>受伤动画</h3><p>受伤也只有一张。</p>
+<p><img src="https://files.catbox.moe/4bwpzy.jpg" alt="受伤动画"></p>
+<h3 id="倒下动画"><a href="#倒下动画" class="headerlink" title="倒下动画"></a>倒下动画</h3><p>角色 gg 的时候倒地动画。</p>
+<p><img src="https://files.catbox.moe/2frez6.jpg" alt="倒地动画"></p>
+<h3 id="未完成动画"><a href="#未完成动画" class="headerlink" title="未完成动画"></a>未完成动画</h3><p>其实还有跳跃、跳跃攻击的动画，但是没有做出来。</p>
+<p>角色的动画这样就算弄好了。</p>
+<h2 id="状态转换"><a href="#状态转换" class="headerlink" title="状态转换"></a>状态转换</h2><p>事物具有“状态”属性，遇到不同条件时，状态就会发生变化。</p>
+<p>比如天冷的时候，水结冰，此时水是固态，而当天气变热，冰化了，变成液态的水，然后天气继续升温，水被蒸发了，变成气态的水蒸气，水蒸气遇到冷空气又会变成雨。</p>
+<p>这个过程就是水的状态转化机制，动画系统也是同理。</p>
+<p>当玩家操控角色行走时，由待机动作转化为奔跑动作，而玩家又按下了攻击键，则角色的动画就会从奔跑转变为奔跑攻击，攻击动作完成后又会变回奔跑动作，然后玩家松开方向键停止奔跑，角色的动画就会从奔跑转为待机。</p>
+<p>一般来说，除了自发的转换之外，动画转换基本是根据玩家的操作来决定的。</p>
+<p>来看看令人头大的动画状态控制器：</p>
+<p><img src="https://files.catbox.moe/82a86r.jpg" alt="动画状态控制器"></p>
+<h3 id="初始状态"><a href="#初始状态" class="headerlink" title="初始状态"></a>初始状态</h3><p>物体总是有一个初始状态，其中 <code>Entry</code> 箭头指向的就是默认进入的动画效果。</p>
+<p><img src="https://files.catbox.moe/4g2m3y.jpg" alt="初始状态"></p>
+<p>这里的意思是，游戏开始时，角色就会进入 <code>Idle</code>（待机动画）。</p>
+<p>打开调试场景测试：</p>
+<p><img src="https://files.catbox.moe/2lsdgf.gif" alt="初始动画"></p>
+<p>可以发现角色播放了眨眼动画，说明设置成功了。</p>
+<p>而且这里只眨眼了一次，说明上面设置的取消循环也成功了。</p>
+<h3 id="待机-奔跑"><a href="#待机-奔跑" class="headerlink" title="待机-奔跑"></a>待机-奔跑</h3><p>角色只有在玩家按键操作的时候，才会从静止状态变为奔跑状态。</p>
+<p>因此可以用两种方法实现状态的转化，第一种是根据玩家的按键，第二种是根据角色当前的移动速度。</p>
+<p>第一种方法是主动变化，第二种方法是被动触发。</p>
+<p>这里选择第一种。</p>
+<p>右键 <code>Player_Idle</code> 动画，在弹出的菜单中选择 <code>Make Transtition</code> 创建一个新的转换关系。</p>
+<p><img src="https://files.catbox.moe/hh7o6d.jpg" alt="新建关系"></p>
+<p>待机动画和奔跑动画是可以相互转换的，所以要建立双向关系。</p>
+<p>动画转换条件只要监听玩家按键就可以了，控制玩家移动的 <code>GetAxis</code> 方法会返回 -1~1 的值。</p>
+<p>当玩家没有按键的时候，返回的是 0，向左移动返回负数，向右返回整数。</p>
+<p>因此这个值就可以当做动画转换的条件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 保存动画组件</span><br><span class="line">private Animator animator;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 在唤醒的时候获取动画组件</span><br><span class="line">animator &#x3D; GetComponent&lt;Animator&gt;();</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 在移动方法里获得水平按键参数</span><br><span class="line">animator.SetFloat(&quot;horizontal&quot;, Mathf.Abs(horizontal));</span><br></pre></td></tr></table></figure>
+
+<p>这里将水平参数转换成绝对值，因为只要正数就够了，方向并不影响动画的播放。</p>
+<p>好了，现在这样就可以进入游戏场景调试了：</p>
+<p><img src="https://files.catbox.moe/d9qysu.gif" alt="待机和奔跑之间的转换"></p>
+<p>简直不要太神奇……如果是自己来写状态机，指不定要花多长的时间呢！</p>
+<h3 id="待机-攻击"><a href="#待机-攻击" class="headerlink" title="待机-攻击"></a>待机-攻击</h3><p>从待机到攻击比较简单，只要在待机状态下玩家按下攻击键就认为是攻击状态。</p>
+<p>这里我对代码进行了一些修改，把按键判定放在 Update，然后在 FixedUpdate 实际发射出子弹。</p>
+<p>因为攻击动作太快（只有 1 帧）会导致以肉眼看不见的速度结束，所以要用到延迟函数，这里我通过协程来实现。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">private void FixedUpdate()</span><br><span class="line">&#123;</span><br><span class="line">    StartCoroutine(Shoot());</span><br><span class="line">    Move();</span><br><span class="line">    Jump();</span><br><span class="line">    GroundCheck();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">private void PressedKey()</span><br><span class="line">&#123;</span><br><span class="line">    horizontal &#x3D; Input.GetAxis(&quot;Horizontal&quot;);</span><br><span class="line"></span><br><span class="line">    if (Input.GetButtonDown(&quot;Jump&quot;) &amp;&amp; isGround)</span><br><span class="line">    &#123;</span><br><span class="line">        jumpPressed &#x3D; true;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (Input.GetButtonDown(&quot;Fire1&quot;))</span><br><span class="line">    &#123;</span><br><span class="line">        isShoot &#x3D; true;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">private IEnumerator Shoot()</span><br><span class="line">&#123;</span><br><span class="line">    if (isShoot)</span><br><span class="line">    &#123;</span><br><span class="line">        isShoot &#x3D; false;</span><br><span class="line">        animator.SetBool(&quot;shoot&quot;, true);</span><br><span class="line"></span><br><span class="line">        GameObject prefab &#x3D; Resources.Load(&quot;Prefabs&#x2F;MiniGame&#x2F;StarBullet&quot;) as GameObject;</span><br><span class="line">        GameObject bulletObj &#x3D; Instantiate(prefab, firePoint);</span><br><span class="line"></span><br><span class="line">        MiniGame_Bullet bullet &#x3D; bulletObj.GetComponent&lt;MiniGame_Bullet&gt;();</span><br><span class="line">        bullet.attacker &#x3D; this;</span><br><span class="line"></span><br><span class="line">        bulletObj.transform.SetParent(bg);</span><br><span class="line"></span><br><span class="line">        yield return new WaitForSeconds(0.05f);</span><br><span class="line"></span><br><span class="line">        animator.SetBool(&quot;shoot&quot;, false);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在生成子弹后 0.05s 将攻击状态变为 false，即切换动画状态。</p>
+<p>演示效果：</p>
+<p><img src="https://files.catbox.moe/ps485v.gif" alt="待机-攻击"></p>
+<p>奔跑状态下按攻击键没有触发攻击动画，是因为还没设置。</p>
+<h3 id="奔跑-奔跑攻击"><a href="#奔跑-奔跑攻击" class="headerlink" title="奔跑-奔跑攻击"></a>奔跑-奔跑攻击</h3><p>普通攻击是停下来的，而奔跑攻击有单独的动画。</p>
+<p>演示效果如下：</p>
+<p><img src="https://files.catbox.moe/8odefg.gif" alt="奔跑-奔跑攻击"></p>
+<p>这里出现了一个比较“呆萌”的效果，主角奔跑攻击然后松开方向键，会出现“原地小跑”的情况，然后才停下来。</p>
+<p><img src="https://files.catbox.moe/ojwxmg.gif" alt="原地小跑"></p>
+<p>这是因为动画先从 Player_RunAttack 转换到 Player_Run，本来应该立即从 Player_Run 转化为 Player_Idle 的，但是因为我用的是 <code>GetAxis</code> 会有一段缓冲减速效果，因此这段极短的缓冲时间就是播放奔跑动画的时间，所以就会出现原地小跑的情况。</p>
+<p>还有这段伸手动作：</p>
+<p><img src="https://files.catbox.moe/8qzngf.gif" alt="伸手"></p>
+<p>这是因为奔跑攻击动画用了循环，而且帧数比较多，所以才会有点“迟钝”的样子。</p>
+<p>只要改成不循环然后减少帧数解决可以解决“伸手”的问题，但还是因为看起来很呆萌，所以就保留下来了。</p>
+<blockquote>
+<p>火兔语录：所有的 bug 都是游戏彩蛋！</p>
+</blockquote>
+<h3 id="未完成动画-1"><a href="#未完成动画-1" class="headerlink" title="未完成动画"></a>未完成动画</h3><p>还剩下两个动画没完成，一个是受伤另一个是倒地。</p>
+<p>这两个动画要等制作出敌人才能实现，所以就留到下一篇了。</p>
+<h2 id="后言"><a href="#后言" class="headerlink" title="后言"></a>后言</h2><p>参考资料：<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1sE411g7jK?t=1301">https://www.bilibili.com/video/BV1sE411g7jK?t=1301</a></p>
+<p>最终还是找到了一个视频资料。</p>
+<p>第一次看到 unity 的动画状态机还以为会是很难理解的东西，但实际体验了一下，感觉并不是想象中那么困难。</p>
+<p>有时候对于未知的事物，还是要勇敢的尝试一下才知道是不是真的很难。</p>
+<p>最开始学 unity 是 4 年前，跟着教学制作了一个 3D 小球的 Demo。</p>
+<p>虽然做出来了，但是全英文的界面让我感觉到学习很困难。</p>
+<p>而且 3D 的摄像机弄了半天也没搞清楚原理，最后就不了了之了。</p>
+<p>也许是因为那时刚毕业，对自己的技术不那么自信，所以才会打退堂鼓。</p>
+<p>但是经过了这么多年以后，技术提高了，自信心也增强了。</p>
+<p>所谓“功夫不负有心人”，我开始相信只要是想学的技术，肯定能学会。</p>
+<p>关键在于决心强不强烈。</p>
+<p>成就感可以驱动行动，如果一个人擅长做一件事，而且这件事具有一定的挑战性，完成这件事就能得到成就感。</p>
+<p>成就感是一种正反馈，得到的正反馈越多，学习的动力越强。</p>
+<p>但如果一个人不擅长做某事，而且尝试过一次之后就失败了，这样就会得到与成就感相反的——『挫败感』。</p>
+<p>如果这个人的内心又比较脆弱，意志也不够坚定，积累了一定的挫败感超过承受能力最终就会打退堂鼓。</p>
+<p>像现在这样记录博客实际上也是在积累「成就感」，边做边写也能够督促自己每天坚持更新。</p>
+<p>如果哪一天没更新了，说明自己偷懒了。</p>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">火烧兔子</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://huotuyouxi.com/2021/05/05/monster-game-5/">http://huotuyouxi.com/2021/05/05/monster-game-5/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://huotuyouxi.com">火兔游戏工作室</a>！</span></div></div><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/unity/">unity</a><a class="post-meta__tags" href="/tags/%E5%BC%80%E5%8F%91%E6%8A%80%E6%9C%AF/">开发技术</a></div><nav id="pagination"><div class="next-post pull-right"><a href="/2021/05/04/monster-game-4/"><span>名为怪物的游戏——《星之魔女》FC小游戏移植（四）</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer class="footer-bg" style="background-image: url(https://i.loli.net/2021/05/02/61DLs9VHetxbq2n.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2020 - 2021 By 火烧兔子</div><div class="framework-info"><span>驱动 - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.9.0"></script><script src="/js/fancybox.js?version=1.9.0"></script><script src="/js/sidebar.js?version=1.9.0"></script><script src="/js/copy.js?version=1.9.0"></script><script src="/js/fireworks.js?version=1.9.0"></script><script src="/js/transition.js?version=1.9.0"></script><script src="/js/scroll.js?version=1.9.0"></script><script src="/js/head.js?version=1.9.0"></script><script src="/js/search/local-search.js"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章"></div></div></div><hr><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a target="_blank" rel="noopener" href="https://github.com/wzpan/hexo-generator-search" style="color:#49B1F5;">hexo-generator-search</a>
+ <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fa fa-times"></i></span></div><div class="search-mask"></div></body></html>
