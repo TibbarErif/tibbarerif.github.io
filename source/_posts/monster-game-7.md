@@ -359,11 +359,461 @@ private void Shoot()
 
 ![受伤时限制攻击](https://files.catbox.moe/bb6thw.gif)
 
-### 敌人受伤
-### 死亡处理
+## 场景UI
+角色受伤虽然减少了 HP，但是现在玩家还看不到具体的生命值还有多少。
+
+这时候就要开始制作场景的 UI（界面）。
+
+包括：
+
+- 显示剩余生命值
+- 显示当前得分
+
+场景 UI 图例：
+
+![场景UI](https://files.catbox.moe/emgazc.jpg)
+
+左上角显示生命值，右上角显示得分。
+
+### 场景控制
+需要一个脚本用来控制整个小游戏的流程。
+
+如进入游戏、游戏结束、UI 显示。
+
+新建脚本 `MiniGame_Controller`：
+
+```
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class MiniGame_Controller : MonoBehaviour
+{
+    public Text scoreText;
+
+    private int score;
+
+    private void Start()
+    {
+        this.AddScore(0);
+    }
+
+    public void AddScore(int score)
+    {
+        this.score += score;
+        scoreText.text = this.score.ToString();
+    }
+}
+```
+
+这个脚本现在包含了得分显示的方法。
+
+`AddScore` 方法传入一个分数参数，更新场景中的文本显示数字。
+
+在游戏对象启动的时候，调用了 `this.AddScore(0)` 来更新文本。
+
+脚本挂在小游戏根节点。
+
+![控制器脚本](https://files.catbox.moe/7po71z.jpg)
+
+小游戏节点的标签更改为：`Controller`
+
+这样在别的对象中可以直接通过标签来获得场景控制器。
+
+### 分数显示
+创建一个 Text 组件，放在右上角的位置即可。
+
+![分数显示](https://files.catbox.moe/jq4hpc.jpg)
+
+将文本节点拖到控制器的参数上面。
+
+进入游戏场景测试：
+
+![测试分数文本](https://files.catbox.moe/nb28l6.gif)
+
+“得分”两字在进入游戏的时候会自动更新为实际的分数值。
+
+## 道具系统
+比如加分道具、加血道具。
+
+因为只有一关，所以不打算制作更多的道具。
+
+游戏中存在 4 种道具。
+
+- 樱桃：在场景中出现，吃到可以加分
+- 金币：打败怪物出现，吃到可以加分
+- 爱心：在场景中出现，吃到可以恢复1点HP
+- 布偶：打败BOSS爆出，吃到可以加分（在正式篇触发隐藏事件）
+
+总体来说可以分成两类：①加分 ②加血
+
+搞清楚之后，就可以开始制作道具了。
+
+### 动态效果
+把游戏素材导入工程里，然后开始编写道具脚本。
+
+### 道具基类
+道具存在许多共通点，可以抽取出道具的基类。
+
+创建脚本 `MiniGame_Item`：
+
+```
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public abstract class MiniGame_Item : MonoBehaviour
+{
+    public int score;
+    protected Rigidbody2D rb;
+
+    private void Awake()
+    {
+        rb = GetComponent<Rigidbody2D>();
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            TouchEvent();
+        }
+    }
+
+    protected void TakeScore()
+    {
+        GameObject root = GameObject.FindGameObjectWithTag("Controller");
+        MiniGame_Controller ctrl = root.GetComponent<MiniGame_Controller>();
+
+        ctrl.AddScore(score);
+    }
+
+    protected abstract void TouchEvent();
+}
+```
+
+道具基类包含了一个 `score` 参数，用于计算角色吃到道具的得分。
+
+`TakeScore` 方法是吃到加分道具时更新场景的分数显示的通用方法。
+
+在唤醒的时候自动获取刚体组件，以便控制道具的行动。
+
+道具只要监听与主角的碰撞事件即可，然后声明一个抽象方法，获得道具的效果在子类实现。
+
+### 加分道具
+加分道具的逻辑很简单，只要玩家吃到道具，更新场景右上角显示的分数即可。
+
+最后销毁道具就完了。
+
+#### Itween 插件
+为了节约时间，直接使用第三方提供的插件包 `Itween`。
+
+这是一个可以控制运动、数值变化的插件。
+
+地址：[iTween](https://assetstore.unity.com/packages/tools/animation/itween-84?locale=zh-CN)
+
+直接从 unity 商店添加到工程即可。
+
+![添加itween](https://files.catbox.moe/nmpnl6.jpg)
+
+获得资源后，在 Unity 的 Window 菜单中选择 `Package Manage`（包管理），在打开的窗口中选择 `My Assets` 即可看到刚才从商店中获取的 `Itween` 插件包了。
+
+![获取我的插件](https://files.catbox.moe/w7q4ed.jpg)
+
+然后选择导入到工程即可。
+
+![导入itween](https://files.catbox.moe/2un1w2.jpg)
+
+导入的插件放在 `Assets/Plugins` 目录下，插件会自动加载，因此这样就完成了。
+
+#### 樱桃
+樱桃是直接出现在场景的道具，它漂浮在空中，有规律的上下浮动。
+
+在场景中添加樱桃的游戏对象：
+
+![樱桃道具](https://files.catbox.moe/d4y2oo.jpg)
+
+创建樱桃脚本 `MiniGame_CherryItem`：
+
+```
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class MiniGame_CherryItem : MiniGame_Item
+{
+    public float moveSpeed = 5f;
+    public float height = 10f;
+
+    private void Start()
+    {
+        iTween.ValueTo(gameObject, new Hashtable
+        {
+            { "from", height },
+            { "to", -height },
+            { "easeType", iTween.EaseType.linear },
+            { "loopType", iTween.LoopType.pingPong },
+            { "onUpdate", "MoveAction" },
+            { "onUpdateTarget", gameObject },
+            { "time", 0.5f },
+        });
+    }
+
+    protected override void TouchEvent()
+    {
+        TakeScore();
+        Destroy(gameObject);
+    }
+
+    private void MoveAction(float value)
+    {
+        Vector3 pos = transform.position;
+
+        pos.y += value * moveSpeed;
+        transform.position = pos;
+    }
+}
+```
+
+`iTween.ValueTo` 方法的作用是动态的将一个初始值 a，调整到 b。
+
+加上 `loopType` 循环类型为：`iTween.LoopType.pingPong`，即像打乒乓球一样有来有回。
+
+比如先从 0~1，这样就算值的变化结束了，然后又从 1~0，始终如此循环。
+
+`easeType` 参数指定了变化的曲线，`iTween.EaseType.linear` 即线性变化，可以理解为均匀的变化。
+
+参数的 `height` 指定了樱桃漂浮的高度，通过 `ValueTo` 方法在这个高度范围内变化。
+
+每次值改变的时候就会调用 `MoveAction` 方法修改樱桃的 y 坐标。
+
+这样樱桃的漂浮轨迹就完成了。
+
+演示效果：
+
+![漂浮的樱桃](https://files.catbox.moe/vr39nk.gif)
+
+吃到樱桃右上角的分数也更新了。
+
+发现角色在吃到道具的时候，发生了刚体碰撞，导致角色被道具反弹了一下，影响手感。
+
+此处是因为我把道具也设置成刚体了，只要将道具设置为触发器，并且移除刚体组件即可。
+
+然后修改 Item 的碰撞回调为触发器回调即可：
+
+```
+private void OnTriggerEnter2D(Collider2D collision)
+{
+    if (collision.gameObject.CompareTag("Player"))
+    {
+        TouchEvent();
+    }
+}
+```
+
+重新测试：
+
+![移除道具的刚体](https://files.catbox.moe/akm99i.gif)
+
+角色吃到道具，但是没有被刚体碰撞阻碍行动，碰撞的问题也解决了。
+
+#### 金币
+金币有自己的动画效果，先给金币加上动画。
+
+![金币动画](https://files.catbox.moe/n9fz55.gif)
+
+金币在生成的时候，会有一个“爆出”的效果，即向上飞出然后落到地上消失。
+
+由于道具已经不是物理组件了，所以掉到地上的逻辑处理就需要自己来实现。
+
+原来的道具基类没有接触地板的判断，因此需要进行修改：
+
+```
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public abstract class MiniGame_Item : MonoBehaviour
+{
+    public int score;
+    protected Rigidbody2D rb;
+
+    private void Awake()
+    {
+        rb = GetComponent<Rigidbody2D>();
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        string tag = collision.gameObject.tag;
+
+        switch (tag)
+        {
+            case "Player":
+                TouchPlayerEvent();
+                break;
+            case "Ground":
+                TouchGroundEvent();
+                break;
+        }
+
+    }
+
+    protected void TakeScore()
+    {
+        GameObject root = GameObject.FindGameObjectWithTag("Controller");
+        MiniGame_Controller ctrl = root.GetComponent<MiniGame_Controller>();
+
+        ctrl.AddScore(score);
+        Destroy(gameObject);
+    }
+
+    protected abstract void TouchGroundEvent();
+    protected abstract void TouchPlayerEvent();
+}
+```
+
+新增抽象方法 `TouchGroundEvent`，如果是不会接触地板的道具，在子类留空即可。
+
+然后创建金币道具类 `MiniGame_GoldItem`：
+
+```
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class MiniGame_GoldItem : MiniGame_Item
+{
+    public float ySpeed = 300f;
+    public float time = 1.5f;
+
+    private float currentSpeed;
+
+    private void Start()
+    {
+        iTween.ValueTo(gameObject, new Hashtable
+        {
+            { "from", ySpeed },
+            { "to", -ySpeed },
+            { "easeType", iTween.EaseType.linear },
+            { "onUpdate", "MoveAction" },
+            { "onUpdateTarget", gameObject },
+            { "time", time },
+        });
+    }
+
+    protected override void TouchGroundEvent()
+    {
+        Destroy(gameObject);
+    }
+
+    protected override void TouchPlayerEvent()
+    {
+        TakeScore();
+        Destroy(gameObject);
+    }
+
+    private void MoveAction(float value)
+    {
+        currentSpeed = value;
+    }
+
+    private void Update()
+    {
+        Vector3 pos = transform.position;
+
+        pos.y += currentSpeed * Time.deltaTime;
+        transform.position = pos;
+    }
+}
+```
+
+这里同样利用了 `ValueTo` 方法的值变化。
+
+金币的上抛速度先是从最大值逐渐减到负数，这样就会反向运动了。
+
+最后掉落到地上把金币销毁就可以了。
+
+演示效果：
+
+![爆出金币](https://files.catbox.moe/y5xb5x.gif)
+
+直接消失的观感似乎不怎么好，以后如果有时间的话会回头优化一下。
+
+#### 分值显示
+吃到加分道具的时候，会在原地留下一个分数显示的文本。
+
+然后逐渐向上飞行然后淡出。
+
+![分数显示效果](https://files.catbox.moe/hj2nno.jpg)
+
+做法十分简单，创建一个 Text 对象。
+
+然后再创建控制文本淡出和向上移动的脚本即可：
+
+```
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class MiniGame_ScoreText : MonoBehaviour
+{
+    public int score;
+    public Text text;
+    public float time = 1f;
+    public float speed = 10f;
+
+    private void Start()
+    {
+        text = GetComponent<Text>();
+        text.text = "+" + score.ToString();
+
+        iTween.ValueTo(gameObject, new Hashtable
+        {
+            { "from", 1f },
+            { "to", 0f },
+            { "easeType", iTween.EaseType.linear },
+            { "onUpdate", "UpdateColor" },
+            { "onUpdateTarget", gameObject },
+            { "onComplete", "Hiden" },
+            { "onCompleteTarget", gameObject },
+            { "time", time },
+        });
+    }
+
+    private void UpdateColor(float value)
+    {
+        text.color = new Color(1, 1, 1, value);
+    }
+
+    private void Hiden()
+    {
+        Destroy(gameObject);
+    }
+
+    private void Update()
+    {
+        Vector3 pos = transform.position;
+        pos.y += speed * Time.deltaTime;
+
+        transform.position = pos;
+    }
+}
+```
+
+演示效果:
+
+![加分文本](https://files.catbox.moe/g0rab2.gif)
+
+### 加血道具
 
 ## 怪物设计
 接上篇，未完成的敌人设计。
+
+### 敌人受伤
+### 死亡处理
 
 ### 垃圾桶怪
 
@@ -372,15 +822,6 @@ private void Shoot()
 ### 布偶怪（BOSS）
 
 ## 对象销毁
-
-## 道具系统
-比如加分道具、加血道具。
-
-因为只有一关，所以不打算制作更多的道具。
-
-### 动态效果
-### 加分道具
-### 加血道具
 
 ## BOSS 战
 
