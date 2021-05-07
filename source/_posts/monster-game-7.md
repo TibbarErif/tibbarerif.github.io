@@ -10,11 +10,15 @@ categories:
  - 制作过程
 ---
 ## 前言
-FC 小游戏的最终篇。
+本来想在这篇把小游戏完结，但是失败了……
 
-完成怪物逻辑设计、界面 UI、BOSS 战、场景设计等。
+几乎一整天没有休息，还是感觉有做不完的事情。
 
-## 受伤判定
+所幸本篇把角色系统做完了，只剩下敌人的设计和关卡流程。
+
+下一篇应该就是完结篇了。
+
+## 玩家受伤
 主角受到的伤害来自两种，第一是被敌人发射的子弹击中，第二是碰到敌人。
 
 而敌人受伤只来源于玩家的攻击，主角碰到敌人只有主角会受到伤害，敌人不会受伤。
@@ -23,10 +27,7 @@ FC 小游戏的最终篇。
 
 之后就可以在碰撞回调中通过标签区分碰撞对象。
 
-### 玩家受伤
-玩家受到伤害事件的处理。
-
-#### 对象类型
+### 对象类型
 首先需要知道碰到玩家的物体是什么，可以用上面说的标签来区分。
 
 如果是碰到道具则应该获得加分或加血，如果是敌人和子弹才会受到伤害。
@@ -69,18 +70,28 @@ private void TouchBullet(Collision2D collision)
 
 现在的碰撞事件是两个刚体之间的碰撞，因此需要使用 `OnCollisionEnter2D` 监听。
 
-这里设置角色与 3 种类型的物体发生碰撞的处理，即敌人、道具、子弹。
+其实这里有两种设计方案，①在角色身上监听碰撞事件 ②在道具上监听碰撞事件
+
+一般来说在“被动”的一方身上绑定监听事件比较符合常规思想。
+
+比如道具“被”主角吃，那么就在道具上处理吃到道具的效果；
+
+再比如主角“被”敌人的子弹击中，那么就在主角身上处理受伤事件。
+
+所以这里的 `TouchItem` 有点多余，以后可能会移除。
+
+此处设置角色与 3 种类型的物体发生碰撞的处理，即敌人、道具、子弹。
 
 具体的方法留空，接下来逐一进行实现。
 
-#### 受伤/死亡动画
+### 受伤/死亡动画
 增加受伤和死亡动画的状态机。
 
 任意状态都可以直接进入受伤状态，而当受伤判定为死亡时，进入死亡动画。
 
 ![主角的受伤和死亡状态](https://files.catbox.moe/6xpk7k.jpg)
 
-#### 抽离受伤事件
+### 抽离受伤事件
 因为角色受到伤害会进入一个保护状态，要与敌人区分开来。
 
 因此需要修改之前写的游戏角色基类，将 `TakeDamage` 方法改成抽象方法：
@@ -112,7 +123,7 @@ public override void TakeDamage(float damage)
 }
 ```
 
-#### 碰到敌人
+### 碰到敌人
 玩家碰到敌人时，显示受伤动画，减少血量，进入场景测试。
 
 ![撞到敌人测试](https://files.catbox.moe/3i5m3g.gif)
@@ -121,7 +132,7 @@ public override void TakeDamage(float damage)
 
 这是因为受伤动画没有转换成其他动画的设置。
 
-#### 受伤动画不解除问题
+### 受伤动画不解除问题
 
 修改动画状态机，当解除受伤动画时，让主角变成待机状态。
 
@@ -133,7 +144,7 @@ public override void TakeDamage(float damage)
 
 受伤动画不解除的问题解决了，但是可以发现，如果继续停留在原地，角色与敌人依然保持接触状态，却不会再触发受伤事件了。这是因为两个刚体组件发生碰撞时，会出现弹开的情况。
 
-#### 无敌时间
+### 无敌时间
 当主角受伤的时候会进入短暂的无敌，避免玩家连续碰到敌人还没反应过来就直接 gg 了。
 
 增加一个变量用来设定角色无敌状态的持续时间，另一个变量保存当前无敌剩余时间：
@@ -204,7 +215,7 @@ private void ProtectedTime()
 
 但是这个弹力实际上很小，所以肉眼看不出来。
 
-#### 击退效果
+### 击退效果
 修改弹力需要创建一个物理材质：
 
 ![弹性材质](https://files.catbox.moe/p9ud5b.jpg)
@@ -260,7 +271,7 @@ private void ProtectedTime()
 
 可以看到这样好多了，但是主角在受伤之后会进入“小跑动画”。
 
-#### 小跑动画问题
+### 小跑动画问题
 这是因为玩家在受伤的时候仍然可以按住水平方向键，因此还会播放奔跑动画。
 
 在控制角色移动的方法中，修改动画参数就可以了：
@@ -294,7 +305,7 @@ private void Move()
 
 ![受伤动画时间不一致问题](https://files.catbox.moe/kydjby.gif)
 
-#### 动画不一致问题
+### 动画不一致问题
 修改受伤动画解除事件与无敌时间保持一致：
 
 ```
@@ -320,7 +331,7 @@ public override void TakeDamage(float damage)
 
 ![受伤动画优化效果](https://files.catbox.moe/nogqt4.gif)
 
-#### 受伤下的操作限制
+### 受伤下的操作限制
 
 但是又有新的问题，受伤的时候还可以跳跃和发射子弹。
 
@@ -358,6 +369,8 @@ private void Shoot()
 演示效果：
 
 ![受伤时限制攻击](https://files.catbox.moe/bb6thw.gif)
+
+玩家受伤动作总算完成了（撒花）
 
 ## 场景UI
 角色受伤虽然减少了 HP，但是现在玩家还看不到具体的生命值还有多少。
@@ -434,11 +447,185 @@ public class MiniGame_Controller : MonoBehaviour
 
 “得分”两字在进入游戏的时候会自动更新为实际的分数值。
 
+### 生命值显示
+生命值在界面左上角显示。
+
+![生命值UI结构示意图](https://files.catbox.moe/zbms1u.jpg)
+
+UI 是由特殊的自动排列 Layout 结构，实现心形血量的自动对齐。
+
+所以这里需要分成两块制作：① 放置心形血量的 Layout ② 心形血量（单体）
+
+还有一种做法就是直接“写死”，即固定角色的血量上限是 5 颗心。
+
+这样不用自动排列结构也不需要单独抽离出单体的心形血量。
+
+好处是更简单，坏处是不利于扩展，这里就不偷懒了，不然以后还得回头修改。
+
+#### Layout
+创建一个空的对象，然后需要注意的是，这里的 Transfrom 并不是普通的，而是 UI 用的 `Rect Transfrom`。
+
+普通的 Transform 示例：
+
+![普通的transform](https://files.catbox.moe/r1w7pd.jpg)
+
+UI 用的 Rect Transfrom：
+
+![UI用的rect transform](https://files.catbox.moe/rl8131.jpg)
+
+可以看到 UI 的对象有宽度和高度，而且还有锚域（不是锚点）。
+
+这个真的是非常难理解的一个要点，刚开始学的时候，卡了一个下午都弄不清楚。
+
+有一篇写的非常好的文章：[Unity进阶技巧 - RectTransform详解](http://www.cocoachina.com/articles/16570)
+
+其实现在我也还没完全搞懂这个锚域的原理……所幸还不需要用到。
+
+Layout 需要设置一个宽度，相当于是一个容器，用来盛放心形图片（血量）。
+
+给 Layout 添加 `Grid Layout Group` 组件：
+
+![容器组件](https://files.catbox.moe/aqlvth.jpg)
+
+这个组件可以设置单元格的大小，然后按照指定的规则进行自动排列。
+
+设置好之后，把心形图片拖到 Layout 底下，当做子节点，然后测试效果：
+
+![测试容器效果](https://files.catbox.moe/gb1nrx.gif)
+
+可以看到每次创建一个新的心形图片的时候，容器自动将其排列，超过容器的宽度时自动换行。
+
+容器这样就设置好了。
+
+#### 心形血量
+心形血量包括两种形态：①充满血量 ②空
+
+创建脚本 `MiniGame_Heart`：
+
+```
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class MiniGame_Heart : MonoBehaviour
+{
+    public Sprite[] sprites;
+
+    private Image icon;
+
+    private void Start()
+    {
+        icon = GetComponent<Image>();
+
+        SetActive(true);
+    }
+
+    public void SetActive(bool result)
+    {
+        int index = 0;
+
+        if (result == true)
+        {
+            index = 1;
+        }
+
+        icon.sprite = sprites[index];
+    }
+}
+```
+
+`Sprite[] sprites` 是一个精灵数组（即图片），把空的心和填满的心的图片放在这个数组备用。
+
+这里对外暴露一个 `SetActive` 用来控制让心变满或变空的方法。
+
+默认情况下，心是空的。
+
+![空的心](https://files.catbox.moe/wzlt1g.jpg)
+
+进入游戏测试：
+
+![测试填充心](https://files.catbox.moe/wesj3x.jpg)
+
+可以发现心已经被填满了，这是因为通过脚本调用 `SetActive` 方法修改了心的图片。
+
+心形血量这样就完成了，拖到 `Resources/Prefabs/MiniGame` 下作为预制体备用。
+
+#### 血量控制
+心形血量的控制交给 Layout。
+
+新建 `MiniGame_HeartLayout` 脚本：
+
+```
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class MiniGame_HeartLayout : MonoBehaviour
+{
+    private List<MiniGame_Heart> hearts = new List<MiniGame_Heart>();
+
+    [HideInInspector]
+    public MiniGame_Player player;
+
+    private void Start()
+    {
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<MiniGame_Player>();
+
+        Init();
+    }
+
+    public void UpdateLast(bool result)
+    {
+        GetCurrentHeart().SetActive(result);
+    }
+
+    private MiniGame_Heart GetCurrentHeart()
+    {
+        int index = player.currentHP - 1;
+
+        return hearts[index];
+    }
+
+    private void Init()
+    {
+        for (int i = 0; i < player.maxHP; i++)
+        {
+            CreateHeart();
+        }
+    }
+
+    private void CreateHeart()
+    {
+        GameObject prefab = Resources.Load("Prefabs/MiniGame/Heart") as GameObject;
+        GameObject heartObj = Instantiate(prefab, transform);
+
+        MiniGame_Heart heart = heartObj.GetComponent<MiniGame_Heart>();
+
+        hearts.Add(heart);
+    }
+}
+```
+
+这里需要修改之前的设定，角色的血量原来设定成 float 类型，需要改成 int。
+
+脚本初始化时自动获取场景的 Player 对象，然后根据玩家的最大血量自动初始化对应的心形血量。
+
+提供了一个可以控制血量变空和填满的方法：`UpdateLast`。
+
+进入游戏测试：
+
+![测试血量容器](https://files.catbox.moe/kgpyud.jpg)
+
+测试 OK，然后在场景控制器新增一个变量：
+
+```
+public MiniGame_HeartLayout heartLayout;
+```
+
+将容器赋值给场景控制器，这样在场景控制器里就可以对心形容器进行控制了。
+
 ## 道具系统
-比如加分道具、加血道具。
-
-因为只有一关，所以不打算制作更多的道具。
-
 游戏中存在 4 种道具。
 
 - 樱桃：在场景中出现，吃到可以加分
@@ -449,9 +636,6 @@ public class MiniGame_Controller : MonoBehaviour
 总体来说可以分成两类：①加分 ②加血
 
 搞清楚之后，就可以开始制作道具了。
-
-### 动态效果
-把游戏素材导入工程里，然后开始编写道具脚本。
 
 ### 道具基类
 道具存在许多共通点，可以抽取出道具的基类。
@@ -466,12 +650,6 @@ using UnityEngine;
 public abstract class MiniGame_Item : MonoBehaviour
 {
     public int score;
-    protected Rigidbody2D rb;
-
-    private void Awake()
-    {
-        rb = GetComponent<Rigidbody2D>();
-    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -493,11 +671,11 @@ public abstract class MiniGame_Item : MonoBehaviour
 }
 ```
 
+（其实这个脚本是修改之后的结果，原来是监听刚体碰撞，后来改成了监听触发器，下文解释为什么要这么改）
+
 道具基类包含了一个 `score` 参数，用于计算角色吃到道具的得分。
 
 `TakeScore` 方法是吃到加分道具时更新场景的分数显示的通用方法。
-
-在唤醒的时候自动获取刚体组件，以便控制道具的行动。
 
 道具只要监听与主角的碰撞事件即可，然后声明一个抽象方法，获得道具的效果在子类实现。
 
@@ -506,8 +684,8 @@ public abstract class MiniGame_Item : MonoBehaviour
 
 最后销毁道具就完了。
 
-#### Itween 插件
-为了节约时间，直接使用第三方提供的插件包 `Itween`。
+#### 动态效果
+为了节约时间，直接使用第三方提供的插件包 `Itween` 来制作动态效果。
 
 这是一个可以控制运动、数值变化的插件。
 
@@ -517,7 +695,9 @@ public abstract class MiniGame_Item : MonoBehaviour
 
 ![添加itween](https://files.catbox.moe/nmpnl6.jpg)
 
-获得资源后，在 Unity 的 Window 菜单中选择 `Package Manage`（包管理），在打开的窗口中选择 `My Assets` 即可看到刚才从商店中获取的 `Itween` 插件包了。
+获得资源后，在 Unity 的 Window 菜单中选择 `Package Manage`（包管理）
+
+在打开的窗口中选择 `My Assets` 即可看到刚才从商店中获取的 `Itween` 插件包了。
 
 ![获取我的插件](https://files.catbox.moe/w7q4ed.jpg)
 
@@ -578,9 +758,9 @@ public class MiniGame_CherryItem : MiniGame_Item
 
 `iTween.ValueTo` 方法的作用是动态的将一个初始值 a，调整到 b。
 
-加上 `loopType` 循环类型为：`iTween.LoopType.pingPong`，即像打乒乓球一样有来有回。
+`loopType` 循环类型为：`iTween.LoopType.pingPong`，即像打乒乓球一样有来有回。
 
-比如先从 0~1，这样就算值的变化结束了，然后又从 1~0，始终如此循环。
+比如先从 0 到 1，这样就算值的变化结束了，然后又从 1 到 0，始终如此循环。
 
 `easeType` 参数指定了变化的曲线，`iTween.EaseType.linear` 即线性变化，可以理解为均匀的变化。
 
@@ -616,7 +796,7 @@ private void OnTriggerEnter2D(Collider2D collision)
 
 ![移除道具的刚体](https://files.catbox.moe/akm99i.gif)
 
-角色吃到道具，但是没有被刚体碰撞阻碍行动，碰撞的问题也解决了。
+刚体碰撞的问题也解决了。
 
 #### 金币
 金币有自己的动画效果，先给金币加上动画。
@@ -624,8 +804,6 @@ private void OnTriggerEnter2D(Collider2D collision)
 ![金币动画](https://files.catbox.moe/n9fz55.gif)
 
 金币在生成的时候，会有一个“爆出”的效果，即向上飞出然后落到地上消失。
-
-由于道具已经不是物理组件了，所以掉到地上的逻辑处理就需要自己来实现。
 
 原来的道具基类没有接触地板的判断，因此需要进行修改：
 
@@ -674,7 +852,7 @@ public abstract class MiniGame_Item : MonoBehaviour
 }
 ```
 
-新增抽象方法 `TouchGroundEvent`，如果是不会接触地板的道具，在子类留空即可。
+新增抽象方法 `TouchGroundEvent`，用于执行道具与地板接触的处理。
 
 然后创建金币道具类 `MiniGame_GoldItem`：
 
@@ -739,7 +917,7 @@ public class MiniGame_GoldItem : MiniGame_Item
 
 ![爆出金币](https://files.catbox.moe/y5xb5x.gif)
 
-直接消失的观感似乎不怎么好，以后如果有时间的话会回头优化一下。
+直接消失的观感似乎不怎么好，以后如果有时间的话再优化。
 
 #### 分值显示
 吃到加分道具的时候，会在原地留下一个分数显示的文本。
@@ -750,7 +928,7 @@ public class MiniGame_GoldItem : MiniGame_Item
 
 做法十分简单，创建一个 Text 对象。
 
-然后再创建控制文本淡出和向上移动的脚本即可：
+再创建用来控制文本逻辑的脚本 `MiniGame_ScoreText`：
 
 ```
 using System.Collections;
@@ -808,35 +986,108 @@ public class MiniGame_ScoreText : MonoBehaviour
 ![加分文本](https://files.catbox.moe/g0rab2.gif)
 
 ### 加血道具
+加血道具直接使用心形图标即可，这样玩家看了就知道这是回血的。
 
-## 怪物设计
-接上篇，未完成的敌人设计。
+因为要调用到回血的方法，所以修改 Item 基类，把碰撞体也作为参数传给子类方法。
 
-### 敌人受伤
-### 死亡处理
+```
+protected abstract void TouchGroundEvent(Collider2D collision);
+protected abstract void TouchPlayerEvent(Collider2D collision);
+```
 
-### 垃圾桶怪
+然后给 Player 方法添加回血方法，修改 `MiniGame_Character` 基类，自动获取场景控制器。
 
-### 球球怪
+```
+protected MiniGame_Controller controller;
 
-### 布偶怪（BOSS）
+controller = GameObject.FindGameObjectWithTag("Controller").GetComponent<MiniGame_Controller>();
+```
 
-## 对象销毁
+如此一来在子类中就可以直接获得控制器了。
 
-## BOSS 战
+接着修改 `MiniGame_Player`，添加回血方法：
 
-### 切换BGM
+```
+public void RecoverHP()
+{
+    if (currentHP >= maxHP)
+    {
+        return;
+    }
 
-### 显示血条
+    currentHP += 1;
+    controller.heartLayout.UpdateLast(true);
+}
+```
 
-### 逻辑处理
+每次调用这个方法可以恢复 1 点 HP。
 
-## 游戏场景
+这里需要先让当前 HP 增加，然后才调用 `UpdateLast` 方法（因为此方法是让最后一格血量充满）。
 
-## GameOver
-### 角色死亡判断
-### BOSS击败判断
+然后是主角受伤的时候，应该扣掉一格血。
 
-## 标题界面
-### 动画效果
-### 按键开始
+```
+public override void TakeDamage(int damage)
+{
+    controller.heartLayout.UpdateLast(false);
+
+    currentHP -= damage;
+    animator.SetBool("hurt", true);
+
+    Wait(delegate
+    {
+        animator.SetBool("hurt", false);
+
+        if (currentHP <= 0)
+        {
+            DeadCallback();
+        }
+
+    }, pretectedTime);
+}
+```
+
+受伤时应该后先更新血量的标志，然后再扣除当前 HP。
+
+接着是吃到补血道具时，要调用 Player 的回复 HP 的方法。
+
+新建 `MiniGame_HeartItem` 类：
+
+```
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class MiniGame_HeartItem : MiniGame_Item
+{
+    protected override void TouchGroundEvent(Collider2D collision)
+    {
+        Destroy(gameObject);
+    }
+
+    protected override void TouchPlayerEvent(Collider2D collision)
+    {
+        MiniGame_Player player = collision.GetComponent<MiniGame_Player>();
+
+        player.RecoverHP();
+        Destroy(gameObject);
+    }
+}
+```
+
+心形道具与角色碰撞时，获得 Player 脚本，然后调用回血方法。
+
+最后销毁自身，让道具消失。
+
+演示效果：
+
+![受伤与回血](https://files.catbox.moe/yw4vpt.gif)
+
+## 后言
+早上 9 点兴奋的起床，开始撸代码。
+
+结果到现在第二天的 00:36 还没弄完……
+
+高估了自己的制作速度。
+
+看来还需要一篇才能真正的完结了。
