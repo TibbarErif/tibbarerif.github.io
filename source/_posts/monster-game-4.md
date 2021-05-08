@@ -83,13 +83,13 @@ public class MiniGame_Player : MonoBehaviour
 
 在唤醒物体时，取得身上绑定的刚体组件，然后监听水平方向的按键，并且赋值给 `horizontal` 变量。
 
-然后在 `FixedUpdate` 方法里对物体施加外力，测试结果：
+然后在 `FixedUpdate` 方法里对刚体赋予水平速度，测试结果：
 
 ![水平移动](https://files.catbox.moe/xd0xkl.gif)
 
 发现角色受到外力直接倒下了……
 
-这是因为角色的重心太高了，受到外力很容易倒下。（unity 复现了 100% 物理效果）
+这是因为角色的重心太高了，受到外力很容易倒下。
 
 解决方法很简单，只要把 z 轴的旋转冻结就可以。
 
