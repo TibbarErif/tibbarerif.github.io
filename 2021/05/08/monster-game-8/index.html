@@ -1,0 +1,144 @@
+<!DOCTYPE html><html lang="zh-Hans"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="名为怪物的游戏——《星之魔女》FC小游戏移植（八）"><meta name="keywords" content="unity,开发技术"><meta name="author" content="火烧兔子"><meta name="copyright" content="火烧兔子"><title>名为怪物的游戏——《星之魔女》FC小游戏移植（八） | 火兔游戏工作室</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.9.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.9.0"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容:${query}"}},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  hexoVersion: '5.4.0'
+} </script><meta name="generator" content="Hexo 5.4.0"></head><body><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="切换文章详情">切换站点概览</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%8C%E4%BA%BA%E7%B3%BB%E7%BB%9F"><span class="toc-number">2.</span> <span class="toc-text">敌人系统</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%8C%E4%BA%BA%E5%8F%97%E4%BC%A4"><span class="toc-number">2.1.</span> <span class="toc-text">敌人受伤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9A%E4%BD%93%E7%B1%BB%E5%9E%8B"><span class="toc-number">2.2.</span> <span class="toc-text">刚体类型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Dynamic%EF%BC%88%E5%8A%A8%E5%8A%9B%E5%AD%A6%E7%9A%84%EF%BC%89"><span class="toc-number">2.2.1.</span> <span class="toc-text">Dynamic（动力学的）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Kinematic%EF%BC%88%E8%BF%90%E5%8A%A8%E5%AD%A6%E7%9A%84%EF%BC%89"><span class="toc-number">2.2.2.</span> <span class="toc-text">Kinematic（运动学的）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Static%EF%BC%88%E9%9D%99%E6%80%81%E7%9A%84%EF%BC%89"><span class="toc-number">2.2.3.</span> <span class="toc-text">Static（静态的）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E5%AD%90%E5%BC%B9%E5%8D%A1%E4%BD%8F%E9%97%AE%E9%A2%98"><span class="toc-number">2.3.</span> <span class="toc-text">解决子弹卡住问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%8C%E4%BA%BA%E6%B6%88%E5%A4%B1%E5%8A%A8%E7%94%BB"><span class="toc-number">2.4.</span> <span class="toc-text">敌人消失动画</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%89%E8%90%BD%E7%89%A9"><span class="toc-number">2.5.</span> <span class="toc-text">掉落物</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%90%E5%BC%B9%E5%87%BB%E4%B8%AD%E7%89%B9%E6%95%88"><span class="toc-number">2.6.</span> <span class="toc-text">子弹击中特效</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%AA%E7%89%A9%E8%AE%BE%E8%AE%A1"><span class="toc-number">3.</span> <span class="toc-text">怪物设计</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9E%83%E5%9C%BE%E6%A1%B6%E6%80%AA"><span class="toc-number">3.1.</span> <span class="toc-text">垃圾桶怪</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%B8%8F%E5%85%A5%E8%AD%A6%E6%88%92%E5%8C%BA"><span class="toc-number">3.1.1.</span> <span class="toc-text">踏入警戒区</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%AA%9A%E6%89%B0%E6%94%BB%E5%87%BB"><span class="toc-number">3.1.2.</span> <span class="toc-text">骚扰攻击</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%84%A4%E6%80%92%E8%BF%BD%E5%87%BB"><span class="toc-number">3.1.3.</span> <span class="toc-text">愤怒追击</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8C%91%E6%88%98%E5%A4%B1%E8%B4%A5%E6%A1%88%E4%BE%8B"><span class="toc-number">3.1.4.</span> <span class="toc-text">挑战失败案例</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BC%BA%E8%A1%8C%E5%87%BB%E7%A0%B4%E6%A1%88%E4%BE%8B"><span class="toc-number">3.1.5.</span> <span class="toc-text">强行击破案例</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%AD%A3%E7%A1%AE%E6%8C%91%E6%88%98%E7%A4%BA%E4%BE%8B"><span class="toc-number">3.1.6.</span> <span class="toc-text">正确挑战示例</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%90%83%E7%90%83%E6%80%AA"><span class="toc-number">3.2.</span> <span class="toc-text">球球怪</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8A%A8%E7%94%BB%E6%95%88%E6%9E%9C"><span class="toc-number">3.2.1.</span> <span class="toc-text">动画效果</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B7%A1%E9%80%BB%E9%80%BB%E8%BE%91"><span class="toc-number">3.2.2.</span> <span class="toc-text">巡逻逻辑</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E7%88%86%E6%80%AA"><span class="toc-number">3.3.</span> <span class="toc-text">自爆怪</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8A%A8%E6%80%81%E6%95%88%E6%9E%9C"><span class="toc-number">3.3.1.</span> <span class="toc-text">动态效果</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%88%86%E7%82%B8%E5%8A%A8%E7%94%BB"><span class="toc-number">3.3.2.</span> <span class="toc-text">爆炸动画</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AB%B9%E8%9C%BB%E8%9C%93"><span class="toc-number">3.3.3.</span> <span class="toc-text">竹蜻蜓</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%82%B8%E5%BC%B9%E6%9C%AC%E4%BD%93"><span class="toc-number">3.3.4.</span> <span class="toc-text">炸弹本体</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%88%86%E7%82%B8%E6%94%BB%E5%87%BB"><span class="toc-number">3.3.5.</span> <span class="toc-text">爆炸攻击</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8E%E8%A8%80"><span class="toc-number">4.</span> <span class="toc-text">后言</span></a></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="https://i.loli.net/2021/05/02/JjR7MmfePax3oc2.jpg"></div><div class="author-info__name text-center">火烧兔子</div><div class="author-info__description text-center">我的世界，在你手中。</div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">文章</span><span class="pull-right">9</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">标签</span><span class="pull-right">3</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">分类</span><span class="pull-right">3</span></a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(https://i.loli.net/2021/05/02/61DLs9VHetxbq2n.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">火兔游戏工作室</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">首页</a><a class="site-page" href="/categories">分类</a><a class="site-page" href="/tags">标签</a><a class="site-page" href="/archives">归档</a></span><span class="pull-right"><a class="site-page social-icon search"><i class="fa fa-search"></i><span> 搜索</span></a></span></div><div id="post-info"><div id="post-title">名为怪物的游戏——《星之魔女》FC小游戏移植（八）</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-05-08</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/%E5%90%8D%E4%B8%BA%E6%80%AA%E7%89%A9%E7%9A%84%E6%B8%B8%E6%88%8F/">名为怪物的游戏</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/%E5%90%8D%E4%B8%BA%E6%80%AA%E7%89%A9%E7%9A%84%E6%B8%B8%E6%88%8F/%E5%88%B6%E4%BD%9C%E8%BF%87%E7%A8%8B/">制作过程</a></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>小游戏终篇，完成最后的敌人设计和关卡设计，以及各种音效处理。</p>
+<p>为了加快写作速度，后面真的不贴代码了。</p>
+<h2 id="敌人系统"><a href="#敌人系统" class="headerlink" title="敌人系统"></a>敌人系统</h2><p>接前前篇，已经完成了部分敌人的动画和幽灵的行动轨迹。</p>
+<h3 id="敌人受伤"><a href="#敌人受伤" class="headerlink" title="敌人受伤"></a>敌人受伤</h3><p>敌人没有受伤动画，而且也没有无敌时间。</p>
+<p>只要计算伤害扣除当前血量，再判断是否归零，就执行死亡回调。</p>
+<p><img src="https://files.catbox.moe/9rs1ht.gif" alt="子弹的物理碰撞"></p>
+<p>这里存在一个很严重的问题，因为子弹添加了刚体，就会与敌人身上的刚体发生碰撞。</p>
+<p>所以子弹击中敌人就会出现上图这样的效果，因为子弹脚本一直在给子弹施加一个前进的力，所以子弹会一直向前飞。</p>
+<p>敌人身上又设置了弹性材质，把子弹弹开，子弹又继续向前，又被弹开……如此反复，变成抖动效果。</p>
+<p>既要使用刚体组件，又不想用它的物理碰撞效果，看起来有点自相矛盾。</p>
+<h3 id="刚体类型"><a href="#刚体类型" class="headerlink" title="刚体类型"></a>刚体类型</h3><p>这个问题困扰了我一段时间，然后查阅手册以及看了一些教程才弄清楚了刚体组件的“妙用”。</p>
+<p><img src="https://files.catbox.moe/d7k0cd.jpg" alt="Body Type"></p>
+<p>刚体组件有三种类型可以设置：</p>
+<ul>
+<li>Dynamic（动力学的）</li>
+<li>Kinematic（运动学的）</li>
+<li>Static（静态的）</li>
+</ul>
+<p>趁这个机会详细搜寻了相关的资料，恶补一下 unity 的知识。</p>
+<h4 id="Dynamic（动力学的）"><a href="#Dynamic（动力学的）" class="headerlink" title="Dynamic（动力学的）"></a>Dynamic（动力学的）</h4><p>贴个官方手册的说明：</p>
+<p><img src="https://files.catbox.moe/uigfio.jpg" alt="Dynamic类型说明"></p>
+<p>简单地说如果一个物体要符合物理特性，可以受到外力的作用，就用此类型。</p>
+<p>如果将物体设置为此类型，那么它应该是受到外力的驱动而发生移动，不应该直接用 transform 来修改坐标。</p>
+<p>此类型对于 CPU 的消耗是极高的，因为它要计算各种物理效果。</p>
+<p>Dynamic 类型的特性大致就是这样，在 FC 小游戏中，把主角设置成这个类型就可以了。</p>
+<p>正如其名“动力学”即通过外力来驱动。</p>
+<h4 id="Kinematic（运动学的）"><a href="#Kinematic（运动学的）" class="headerlink" title="Kinematic（运动学的）"></a>Kinematic（运动学的）</h4><p>Kinematic 类型的刚体，不会受到重力以及其他外力的影响。</p>
+<p>虽然不能受到外力的驱动而移动，但是刚体可以直接赋予速度，例如前文控制主角移动的方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rb.velocity &#x3D; new Vector2(horizontal * moveSpeed, rb.velocity.y);</span><br></pre></td></tr></table></figure>
+
+<p>给与刚体一个水平方向的力，就可以驱动刚体朝着水平方向移动。</p>
+<p>所以这种类型才是我想要的：不会受到外力影响。</p>
+<p>正如其名“运动学”即通过改变速度来驱动。</p>
+<h4 id="Static（静态的）"><a href="#Static（静态的）" class="headerlink" title="Static（静态的）"></a>Static（静态的）</h4><p>静态的比较好理解，就是风雨不动安如山。</p>
+<p>既无法通过外力“撼动”它，亦无法赋予刚体速度来移动它。</p>
+<p>不管你推它、撞它，它都在那里。</p>
+<h3 id="解决子弹卡住问题"><a href="#解决子弹卡住问题" class="headerlink" title="解决子弹卡住问题"></a>解决子弹卡住问题</h3><p>将子弹类型设置为 <code>Kinematic</code>。</p>
+<p><img src="https://files.catbox.moe/vzd7xs.gif" alt="运动学不发生碰撞"></p>
+<p>默认情况下，Kinematic 类型只与 Dynamic 类型的刚体发生碰撞。</p>
+<p>如果要检测与其他类型的碰撞，需要勾选 <code>Use Full Kinematic Contacts</code>：</p>
+<p><img src="https://files.catbox.moe/3w1dbk.jpg" alt="完全碰撞检测设置"></p>
+<p>不过这里并不希望子弹发生物理碰撞效果。</p>
+<p>只需要把子弹的碰撞体改成 <code>Trigger</code>（触发器），然后监听触发器事件即可。</p>
+<h3 id="敌人消失动画"><a href="#敌人消失动画" class="headerlink" title="敌人消失动画"></a>敌人消失动画</h3><p>敌人死亡时，会停止移动，然后原地淡出消失。</p>
+<p><img src="https://files.catbox.moe/cte3md.gif" alt="敌人消失"></p>
+<h3 id="掉落物"><a href="#掉落物" class="headerlink" title="掉落物"></a>掉落物</h3><p>敌人完全消失后，会在原地爆出道具。</p>
+<p><img src="https://files.catbox.moe/8ynq6c.gif" alt="消灭敌人爆金币"></p>
+<p>吃到道具加上分数提示效果。</p>
+<p><img src="https://files.catbox.moe/mxq0hk.gif" alt="分数提示"></p>
+<h3 id="子弹击中特效"><a href="#子弹击中特效" class="headerlink" title="子弹击中特效"></a>子弹击中特效</h3><p>子弹击中敌人时，应该把子弹消除，而不是让子弹还能继续穿透。</p>
+<p>制作子弹击中的特效动画。</p>
+<p><img src="https://files.catbox.moe/xn83qe.gif" alt="子弹击中动画"></p>
+<p>把这个做成预制体，当子弹击中目标的时候就生成这个动画特效，然后把子弹消除。</p>
+<p><img src="https://files.catbox.moe/70zsr7.gif" alt="击中特效"></p>
+<p>击中特效在动画播放结束后也会自动销毁。</p>
+<p>敌人受伤事件这样就完成了。</p>
+<h2 id="怪物设计"><a href="#怪物设计" class="headerlink" title="怪物设计"></a>怪物设计</h2><p>幽灵的行动轨迹比较简单，但是后面的这几个就比较复杂了。</p>
+<h3 id="垃圾桶怪"><a href="#垃圾桶怪" class="headerlink" title="垃圾桶怪"></a>垃圾桶怪</h3><p>垃圾桶怪前方一小片区域是“侦查区”，如果玩家靠近这个区域，自己的“领地”被入侵了，它就会发怒驱逐入侵者。</p>
+<p>玩家没有踏进领地，但是在远处用子弹“骚扰攻击”，也会令垃圾桶怪变得愤怒，原因是“吵到”它休息了！</p>
+<p>愤怒的垃圾桶怪会向前“狂奔”，如果玩家被碰到了就会受到 1 点伤害。</p>
+<p>而且因为有“垃圾桶”的防护，它的防御力比起其他生物要高得多，想要打败它可不容易。</p>
+<p>如果不小心激怒了它，最好的方法就是找个机会从它身上跳过。</p>
+<h4 id="踏入警戒区"><a href="#踏入警戒区" class="headerlink" title="踏入警戒区"></a>踏入警戒区</h4><p>踏入垃圾桶怪的警戒区时，这个距离非常危险。</p>
+<p>垃圾桶怪会现出“原形”吓退入侵者，原本可爱的外表也会变得十分可怕。</p>
+<p><img src="https://files.catbox.moe/m6k160.gif" alt="踏入警戒区"></p>
+<h4 id="骚扰攻击"><a href="#骚扰攻击" class="headerlink" title="骚扰攻击"></a>骚扰攻击</h4><p>玩家使用子弹攻击多次后，垃圾桶怪也会因为被骚扰而变得烦躁愤怒。</p>
+<p>如果本体还未出现，玩家的子弹会打在垃圾桶上，这是不会对本体造成伤害的。</p>
+<p>可以从子弹的攻击特效看出来，在还没露出本体的时候，子弹直接消失了，而本体出现之后，子弹击中会产生特效。</p>
+<p>除此之外，还会加入一个打中铁桶的音效。</p>
+<p>这样设计之后，即使不告诉玩家垃圾桶怪是无敌的，玩家自然也能根据细节判断出来了。</p>
+<blockquote>
+<p>当一个怪物不可战胜的时候，应该让玩家从细微之处发觉不对劲，而不是故意让玩家去挑战一个无法战胜的敌人白费时间。</p>
+</blockquote>
+<p>演示效果：</p>
+<p><img src="https://files.catbox.moe/8259wh.gif" alt="攻击骚扰"></p>
+<h4 id="愤怒追击"><a href="#愤怒追击" class="headerlink" title="愤怒追击"></a>愤怒追击</h4><p>现在它还只是傻傻的在原地挨打，是时候给它增加一些对玩家的威胁了。</p>
+<p>在整个 FC 小游戏中，它是第二危险的魔物！</p>
+<p>垃圾桶怪在进入愤怒状态的时候，会朝着玩家“飞扑”过来。</p>
+<p><img src="https://files.catbox.moe/gmlkn9.gif" alt="受到骚扰的愤怒追击"></p>
+<p><img src="https://files.catbox.moe/dzu46x.gif" alt="进入警戒区域的追击"></p>
+<h4 id="挑战失败案例"><a href="#挑战失败案例" class="headerlink" title="挑战失败案例"></a>挑战失败案例</h4><p>试图强行跳过的玩家很容易被“三连击”。</p>
+<p><img src="https://files.catbox.moe/pi2b6m.gif" alt="三连带走"></p>
+<h4 id="强行击破案例"><a href="#强行击破案例" class="headerlink" title="强行击破案例"></a>强行击破案例</h4><p>强行“站撸”在垃圾桶靠近之前消灭它！</p>
+<p><img src="https://files.catbox.moe/t765u3.gif" alt="强行站撸"></p>
+<p>虽然最终消灭了垃圾桶怪，但还是被带走一颗心。</p>
+<p>比起直接踏入警戒区，用子弹骚扰会让它更加愤怒！</p>
+<p>所以千万不要这么做……</p>
+<h4 id="正确挑战示例"><a href="#正确挑战示例" class="headerlink" title="正确挑战示例"></a>正确挑战示例</h4><p>实际上只要找准位置，可以轻松的从它的头上跃过。</p>
+<p><img src="https://files.catbox.moe/keoplh.gif" alt="正确跳过垃圾桶怪"></p>
+<h3 id="球球怪"><a href="#球球怪" class="headerlink" title="球球怪"></a>球球怪</h3><p>球球怪是在地面巡逻的敌人。</p>
+<p>它会在地面弹跳巡逻指定的区域，不会主动攻击玩家。</p>
+<h4 id="动画效果"><a href="#动画效果" class="headerlink" title="动画效果"></a>动画效果</h4><p>在地面弹起动画。</p>
+<p><img src="https://files.catbox.moe/9x9zye.gif" alt="球球怪"></p>
+<h4 id="巡逻逻辑"><a href="#巡逻逻辑" class="headerlink" title="巡逻逻辑"></a>巡逻逻辑</h4><p>因为不是用刚体实现跳跃，花了好长时间……</p>
+<p>不过总算是完成了。</p>
+<p><img src="https://files.catbox.moe/etqlek.gif" alt="跳跃巡逻球球怪"></p>
+<h3 id="自爆怪"><a href="#自爆怪" class="headerlink" title="自爆怪"></a>自爆怪</h3><p>自爆怪是头顶上有着竹蜻蜓的球状炸弹型敌人。</p>
+<p>最开始的时候，并不是将这只怪物设计成投弹自爆的。</p>
+<p>而是想做一个类似“苍蝇”一样很小只的敌人，在 BOSS 的第二阶段，BOSS 使用召唤技能就会招来一群这样的敌人。</p>
+<p>然后这群“苍蝇”会排的整整齐齐飞向玩家（肉搏冲击！）</p>
+<p>它本身并不会发射子弹，仅仅只是用身体撞击玩家造成伤害。</p>
+<p>脑补出它们成群阶段，转着圈圈，摆出各种阵势的样子（类似大雁成群结队飞行，摆出各种阵型）感觉会很有趣。</p>
+<p>但是要实现起来就比较复杂了，要设计好各种阵型的坐标……</p>
+<p>然后就弃坑了。</p>
+<p>弃坑之后，反而激发了另一种灵感：</p>
+<p>既然是飞行，像多啦A梦那样在头上带着竹蜻蜓感觉也是挺有趣的。</p>
+<p>因为本体太重了，竹蜻蜓脱落，并且飞走了！</p>
+<p>它本体并不会飞，所以就自由落体运动掉了下来。</p>
+<p>掉到地上砸到玩家？感觉也不错，但是为何不像飞机投下导弹那样？</p>
+<p>伴随着咻咻的音效（空袭警报）让玩家产生紧张感。</p>
+<p>所以头顶竹蜻蜓的自爆怪就这么设计出来了。</p>
+<h4 id="动态效果"><a href="#动态效果" class="headerlink" title="动态效果"></a>动态效果</h4><p><img src="https://files.catbox.moe/omynqq.gif" alt="自爆怪"></p>
+<p>它会在天上飞行，然后从竹蜻蜓脱落，掉到地上产生爆炸。</p>
+<p>因为体型很小，如果玩家没有注意观察的话很容易中招。</p>
+<h4 id="爆炸动画"><a href="#爆炸动画" class="headerlink" title="爆炸动画"></a>爆炸动画</h4><p>自爆怪掉到地上或者在空中被玩家击中就会产生爆炸。</p>
+<p><img src="https://files.catbox.moe/yk2m92.gif" alt="爆炸动画"></p>
+<h4 id="竹蜻蜓"><a href="#竹蜻蜓" class="headerlink" title="竹蜻蜓"></a>竹蜻蜓</h4><p>竹蜻蜓会与本体分离，独自飞出去，最后消失在天空。</p>
+<p><img src="https://files.catbox.moe/079ac4.gif" alt="竹蜻蜓脱离动画"></p>
+<h4 id="炸弹本体"><a href="#炸弹本体" class="headerlink" title="炸弹本体"></a>炸弹本体</h4><p>当竹蜻蜓脱离后，本体就不能再继续飞行了，而会掉落到地上。</p>
+<p>本体（炸弹）会因为惯性继续向前运动，直到落到地上或者被玩家击中爆炸。</p>
+<p><img src="https://files.catbox.moe/uixqy3.gif" alt="运动轨迹"></p>
+<h4 id="爆炸攻击"><a href="#爆炸攻击" class="headerlink" title="爆炸攻击"></a>爆炸攻击</h4><p>掉落的本体要与角色或者地面碰撞，然后发生爆炸。</p>
+<p><img src="https://files.catbox.moe/5h8d0t.gif" alt="碰到地板爆炸"></p>
+<p>一起去看流星雨，落在主角的头上。</p>
+<p><img src="https://files.catbox.moe/gqne8z.gif" alt="碰到玩家"></p>
+<p>高难度操作，在对方还没落地成盒之前打爆它！</p>
+<p><img src="https://files.catbox.moe/p82413.gif" alt="截胡射击"></p>
+<h2 id="后言"><a href="#后言" class="headerlink" title="后言"></a>后言</h2><p>虽然今天又是爆肝一整天，但还是做不完啊！！！！</p>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">火烧兔子</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://huotuyouxi.com/2021/05/08/monster-game-8/">http://huotuyouxi.com/2021/05/08/monster-game-8/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://huotuyouxi.com">火兔游戏工作室</a>！</span></div></div><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/unity/">unity</a><a class="post-meta__tags" href="/tags/%E5%BC%80%E5%8F%91%E6%8A%80%E6%9C%AF/">开发技术</a></div><nav id="pagination"><div class="next-post pull-right"><a href="/2021/05/07/monster-game-7/"><span>名为怪物的游戏——《星之魔女》FC小游戏移植（七）</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer class="footer-bg" style="background-image: url(https://i.loli.net/2021/05/02/61DLs9VHetxbq2n.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2020 - 2021 By 火烧兔子</div><div class="framework-info"><span>驱动 - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.9.0"></script><script src="/js/fancybox.js?version=1.9.0"></script><script src="/js/sidebar.js?version=1.9.0"></script><script src="/js/copy.js?version=1.9.0"></script><script src="/js/fireworks.js?version=1.9.0"></script><script src="/js/transition.js?version=1.9.0"></script><script src="/js/scroll.js?version=1.9.0"></script><script src="/js/head.js?version=1.9.0"></script><script src="/js/search/local-search.js"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章"></div></div></div><hr><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a target="_blank" rel="noopener" href="https://github.com/wzpan/hexo-generator-search" style="color:#49B1F5;">hexo-generator-search</a>
+ <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fa fa-times"></i></span></div><div class="search-mask"></div></body></html>
