@@ -4,6 +4,35 @@
   
     
     <entry>
+      <title>名为怪物的游戏——《星之魔女》FC小游戏移植（EX篇）</title>
+      <link href="2021/05/12/monster-game-9/"/>
+      <url>2021/05/12/monster-game-9/</url>
+      
+        <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>前篇完成了敌人设计，最后只差 BOSS 了。</p><p>本篇应该能做完了，应该……</p><h2 id="布偶怪（BOSS）"><a href="#布偶怪（BOSS）" class="headerlink" title="布偶怪（BOSS）"></a>布偶怪（BOSS）</h2><p>这是一只被丢弃布偶。</p><p>它的胸前系着巨大的蝴蝶结，看上去并不像玩偶本身的装饰物，而是主人给它戴上的。</p><p>一边的耳朵似乎曾经坏掉过，但被什么人用丝线缝补过。</p><p>给它戴上可爱的蝴蝶结，又修补了破掉的耳朵……</p><p>它的主人应该是十分疼爱它的，但为何它却出现在荒郊野外的垃圾堆里……</p><p>不知是什么原因让它具有了意识，成为了布偶型的魔物。</p><p>是主人丢弃了它？或者是遭遇了什么变故？</p><p>它似乎在等着什么，游荡在附近不肯离开。</p><p>也许，是仍在期待着见到主人一面……</p><p><img src="https://z3.ax1x.com/2021/05/09/gJyNfP.gif" alt="布偶怪"></p><h3 id="行动模式"><a href="#行动模式" class="headerlink" title="行动模式"></a>行动模式</h3><p>BOSS 一共有三个阶段。</p><p>血量被消除到一定程度的时候，将会转换行动模式，不同模式挑战难度由易到难。</p><h4 id="基础设定"><a href="#基础设定" class="headerlink" title="基础设定"></a>基础设定</h4><p>BOSS 始终漂浮在玩家上方的位置，需要玩家跳跃起来才能打得到。</p><p><a href="https://imgtu.com/i/gJgjXT"><img src="https://z3.ax1x.com/2021/05/09/gJgjXT.gif" alt="漂浮的布偶"></a></p><p>如此设计的目的是避免玩家站在地上“无脑”输出，导致毫无挑战性。</p><p>当玩家跳起来的时候，在空中的阶段虽然可以通过方向键改变运动位置，但却没有在地面上灵活。</p><p>跳跃本身就是一个危险的动作，在空中躲避子弹的难度比地面上高得多。</p><p>让玩家不能在舒适区输出，以此增加危机感。 </p><p>太频繁的让玩家进行跳跃也会造成操作性的乏味。</p><p>所以 BOSS 的血量并不会很多，而且除了第一阶段之外也不会经常在低空位置漂浮。</p><p>大多数情况，玩家需要做的就是在地面上躲避 BOSS 的弹幕攻击，然后等 BOSS 飘下来的时候打它。</p><h4 id="技能：隐遁"><a href="#技能：隐遁" class="headerlink" title="技能：隐遁"></a>技能：隐遁</h4><p>潜入黑暗，悄无声息的出现在奇妙的位置。</p><p><img src="https://ftp.bmp.ovh/imgs/2021/05/a0dc8f065c5b6372.gif" alt="技能：隐遁"></p><p>隐遁是 BOSS 经常使用的技能，因此它的位置飘忽不定。</p><p>玩家需要时刻打起精神避免它“突然”出现在身后。</p><h4 id="技能：黑暗能量弹"><a href="#技能：黑暗能量弹" class="headerlink" title="技能：黑暗能量弹"></a>技能：黑暗能量弹</h4><p>从布偶的口中吐出黑暗能量攻击玩家。</p><p><img src="https://files.catbox.moe/xwcx8y.gif" alt="黑暗能量弹"></p><h4 id="平静布偶"><a href="#平静布偶" class="headerlink" title="平静布偶"></a>平静布偶</h4><p>此状态下的布偶，性格温顺，只会缓缓的在场景中低空漂浮，同时发射少量的子弹试探性的攻击。</p><p>这个阶段的 BOSS 仅仅只是做出一些“吓人”的举动，以此来观察玩家的反应。</p><p><img src="https://files.catbox.moe/qqcy6f.gif" alt="平静模式攻击方式"></p><p>布偶怪会向前“逼近”玩家，但是却又在快要靠近极限边缘的时候使用“隐遁”消失在黑暗中。</p><p>然后出现在上方的位置，悠闲的飘到另一边，途中释放 3 次黑暗能量弹攻击玩家，接着又消失在黑暗。</p><p>小插曲：</p><p>控制 BOSS 的行动方式还没找到一个简单有效的方法，只能硬撸。</p><p>结果就是整整一个下午加上忙到晚上 9 点才把这个功能实现出来。</p><p>最后贴上 BOSS 行动轨迹的代码图，简直令人绝望的嵌套地狱：</p><p><img src="https://files.catbox.moe/8ix6fi.jpg" alt="平静布偶行动逻辑代码（部分）"></p><p>这还是我重写了三次，用三种不同方法最后实现的结果（前面两种方法更糟）。</p><p>尽管代码很潦草，但功能本身是没问题的，玩家层面感知不到。</p><p>因为我不懂得使用状态机的缘故，为了赶进度只好暂时妥协了，等忙完了就好好学习。</p><h4 id="狂暴布偶"><a href="#狂暴布偶" class="headerlink" title="狂暴布偶"></a>狂暴布偶</h4><p>布偶被激怒而进入狂暴状态，它会遁入黑暗，然后从高处猛冲向玩家。</p><p><img src="https://files.catbox.moe/m4u3g4.gif" alt="高速猛冲"></p><p>随后，召唤出许多幽灵向玩家袭来。</p><p><img src="https://files.catbox.moe/pzpk3b.gif" alt="幽灵召唤"></p><p>进入第二阶段以后，难度直线上升。</p><p>BOSS 的行动将会锁定玩家的位置，然后以极快的速度向玩家袭来，躲避难度极高。</p><p>第二阶段十分考验玩家的反应速度。</p><h4 id="疯狂布偶"><a href="#疯狂布偶" class="headerlink" title="疯狂布偶"></a>疯狂布偶</h4><p>濒死状态的布偶垂死反击！</p><p>召唤附近生物“大游行”！</p><p><img src="https://files.catbox.moe/4tnx60.jpg" alt="异常生物大游行(静态示意图)"></p><p>BOSS 停留在原地不断召唤出球球怪和幽灵来攻击玩家。</p><p>第三阶段的难度直线上升，虽然 BOSS 此时会停在边缘位置，但是玩家需要躲避袭来的魔物。</p><p>在躲避的同时一边发射子弹攻击 BOSS，空中还会有幽灵的“空袭”威胁。</p><h4 id="形态转换"><a href="#形态转换" class="headerlink" title="形态转换"></a>形态转换</h4><p>BOSS 的三个阶段完成了，但还缺少逻辑判断什么时候该进行下一个阶段。</p><p>只要在 BOSS 受伤的时候判断当前血量即可，分别在：66%、33% 的时候自动进入下一个阶段。</p><h2 id="BOSS-血条"><a href="#BOSS-血条" class="headerlink" title="BOSS 血条"></a>BOSS 血条</h2><p>怪物的血条 UI 制作比较简单。</p><p>在屏幕下方创建一个水平的滑动条即可。</p><p><img src="https://files.catbox.moe/ztybtb.jpg" alt="血条UI"></p><p>实现血条的逻辑有两种方案。</p><p>第一种是被动式的，将怪物和血条绑定，在怪物受到伤害的时候血条也会减少。</p><p>第二种是主动式的，血条实时获取怪物的血量，根据血量改变血条的值。</p><p>第一种比较节省 CPU，第二种普适性比较高。</p><p>因为小游戏的性能没压力，所以就选第二种作为实现方案。</p><p>还有一个需要注意的地方是之前把血量转成 int（整数）类型，可是血条的值是浮点数。</p><p>所以在计算的时候，需要进行转换：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">private void Update()</span><br><span class="line">&#123;</span><br><span class="line">    slider.value &#x3D; (float)monster.currentHP &#x2F; monster.maxHP;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>血条的 Update 方法这样就可以了。</p><p>然后进入游戏测试：</p><p><img src="https://files.catbox.moe/vlv8x8.gif" alt="血条测试"></p><p>BOSS 的血条处理也完成了！</p><h2 id="后言"><a href="#后言" class="headerlink" title="后言"></a>后言</h2><p>EX 篇整整写了三天半才完成。</p><p>除了设计 BOSS 的时候找灵感花了一点时间，还有制作效率也降低了不少。</p><p>可能是跟最近天气变热有关，气温上升了很多，下午的时候会有点迷迷糊糊。</p><p>（舍不得开空调……）</p><p>还有一方面是连续集中精神做一件事很容易出现精神疲劳。</p><p>中间还是得找一些别的事情分散精力，让大脑稍微休息一下。</p><p>总的来说，最后的怪物 BOSS 终于完成了，下一篇 END（终结）篇，将会迎来小游戏的完结（应该）。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 名为怪物的游戏 </category>
+          
+          <category> 制作过程 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> unity </tag>
+            
+            <tag> 开发技术 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>名为怪物的游戏——《星之魔女》FC小游戏移植（八）</title>
       <link href="2021/05/08/monster-game-8/"/>
       <url>2021/05/08/monster-game-8/</url>
