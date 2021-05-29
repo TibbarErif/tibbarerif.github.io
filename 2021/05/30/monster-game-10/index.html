@@ -1,0 +1,122 @@
+<!DOCTYPE html><html lang="zh-Hans"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="名为怪物的游戏——《星之魔女》FC小游戏移植（END）"><meta name="keywords" content="unity,开发技术"><meta name="author" content="火烧兔子"><meta name="copyright" content="火烧兔子"><title>名为怪物的游戏——《星之魔女》FC小游戏移植（END） | 火兔游戏工作室</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.9.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.9.0"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容:${query}"}},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  hexoVersion: '5.4.0'
+} </script><meta name="generator" content="Hexo 5.4.0"></head><body><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="切换文章详情">切换站点概览</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%BA%E6%99%AF%E6%90%AD%E5%BB%BA"><span class="toc-number">2.</span> <span class="toc-text">场景搭建</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E5%9C%BA%E6%99%AF"><span class="toc-number">2.1.</span> <span class="toc-text">基本场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%BA%E6%99%AF%E6%BB%9A%E5%8A%A8"><span class="toc-number">2.2.</span> <span class="toc-text">场景滚动</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%9A%E9%87%8D%E5%8D%B7%E8%BD%B4"><span class="toc-number">2.3.</span> <span class="toc-text">多重卷轴</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%BA%E6%99%AF%E9%99%90%E5%88%B6"><span class="toc-number">2.4.</span> <span class="toc-text">场景限制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%86%E9%87%8E%E8%B7%9F%E9%9A%8F"><span class="toc-number">2.5.</span> <span class="toc-text">视野跟随</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8A%80%E6%9C%AF%E9%97%AE%E9%A2%98"><span class="toc-number">2.5.1.</span> <span class="toc-text">技术问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%91%84%E5%83%8F%E6%9C%BA%E8%B7%9F%E9%9A%8F"><span class="toc-number">2.5.2.</span> <span class="toc-text">摄像机跟随</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%98%BB%E6%8C%A1%E7%8E%A9%E5%AE%B6%E5%89%8D%E8%BF%9B-%E5%90%8E%E9%80%80"><span class="toc-number">2.6.</span> <span class="toc-text">阻挡玩家前进&#x2F;后退</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%94%80%E6%AF%81%E7%89%A9%E4%BD%93-%E6%95%8C%E4%BA%BA-%E5%AD%90%E5%BC%B9"><span class="toc-number">3.</span> <span class="toc-text">销毁物体&#x2F;敌人&#x2F;子弹</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E5%8D%A1%E8%AE%BE%E8%AE%A1"><span class="toc-number">4.</span> <span class="toc-text">关卡设计</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BF%80%E6%B4%BB%E6%95%8C%E4%BA%BA"><span class="toc-number">4.1.</span> <span class="toc-text">激活敌人</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%99%E5%AD%A6%E5%85%B3%E5%8D%A1"><span class="toc-number">4.2.</span> <span class="toc-text">教学关卡</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#BOSS-%E5%8F%8A%E5%85%B3%E5%8D%A1%E6%B5%81%E7%A8%8B"><span class="toc-number">5.</span> <span class="toc-text">BOSS 及关卡流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B8%B8%E6%88%8F%E5%89%A7%E6%83%85"><span class="toc-number">6.</span> <span class="toc-text">游戏剧情</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B4%A0%E6%9D%90%E9%97%AE%E9%A2%98"><span class="toc-number">7.</span> <span class="toc-text">素材问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%94%E7%A4%BA%E6%95%88%E6%9E%9C"><span class="toc-number">8.</span> <span class="toc-text">演示效果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8E%E8%A8%80"><span class="toc-number">9.</span> <span class="toc-text">后言</span></a></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="https://i.loli.net/2021/05/02/JjR7MmfePax3oc2.jpg"></div><div class="author-info__name text-center">火烧兔子</div><div class="author-info__description text-center">我的世界，在你手中。</div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">文章</span><span class="pull-right">11</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">标签</span><span class="pull-right">3</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">分类</span><span class="pull-right">3</span></a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(https://i.loli.net/2021/05/02/61DLs9VHetxbq2n.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">火兔游戏工作室</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">首页</a><a class="site-page" href="/categories">分类</a><a class="site-page" href="/tags">标签</a><a class="site-page" href="/archives">归档</a></span><span class="pull-right"><a class="site-page social-icon search"><i class="fa fa-search"></i><span> 搜索</span></a></span></div><div id="post-info"><div id="post-title">名为怪物的游戏——《星之魔女》FC小游戏移植（END）</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-05-30</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/%E5%90%8D%E4%B8%BA%E6%80%AA%E7%89%A9%E7%9A%84%E6%B8%B8%E6%88%8F/">名为怪物的游戏</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/%E5%90%8D%E4%B8%BA%E6%80%AA%E7%89%A9%E7%9A%84%E6%B8%B8%E6%88%8F/%E5%88%B6%E4%BD%9C%E8%BF%87%E7%A8%8B/">制作过程</a></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>真的完结啦！！！</p>
+<p>演示地址：<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1Bf4y1h7RE/">前往B站观看</a></p>
+<p>下载地址：<a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1lYDppNY_xTawMjX2H5rCkQ">百度网盘</a></p>
+<p>提取码：gq8c</p>
+<h2 id="场景搭建"><a href="#场景搭建" class="headerlink" title="场景搭建"></a>场景搭建</h2><h3 id="基本场景"><a href="#基本场景" class="headerlink" title="基本场景"></a>基本场景</h3><p>导入场景素材，然后搭建游戏基础场景。</p>
+<p><img src="https://files.catbox.moe/faph6j.jpg" alt="游戏场景"></p>
+<h3 id="场景滚动"><a href="#场景滚动" class="headerlink" title="场景滚动"></a>场景滚动</h3><p>玩家向前奔跑时，当玩家跑到屏幕的中线位置，背景就会开始跟随滚动。</p>
+<h3 id="多重卷轴"><a href="#多重卷轴" class="headerlink" title="多重卷轴"></a>多重卷轴</h3><p>多重卷轴的原理是利用多个背景层移动速度不一致让玩家存在视觉的偏差。</p>
+<p>使用多重卷轴可以让背景更有立体感。</p>
+<h3 id="场景限制"><a href="#场景限制" class="headerlink" title="场景限制"></a>场景限制</h3><p>跑到极限位置时，背景不再滚动，并且玩家无法继续向前。</p>
+<p>而玩家跑到屏幕左侧时，也无法往回跑。</p>
+<h3 id="视野跟随"><a href="#视野跟随" class="headerlink" title="视野跟随"></a>视野跟随</h3><p>场景中的摄像机默认是静止的，当玩家向前走时，摄像机应该也跟着走。</p>
+<p>这样才能让主角一直保持在视野里。</p>
+<p>摄像机的移动是有规律的。</p>
+<p>当玩家没有超过屏幕水平中线位置时摄像机不会移动，这样可以让玩家不会超过屏幕中线的位置。</p>
+<p>距离屏幕右侧有一段比较大的安全距离，可以让玩家有足够的判断时间躲避袭来的敌人或者子弹。</p>
+<h4 id="技术问题"><a href="#技术问题" class="headerlink" title="技术问题"></a>技术问题</h4><p>实际上视野跟随实现起来很简单，但是因为我一开始设计失误，把所有的图片都当做 UI 了。</p>
+<p>UI 无法跟随摄像机移动，但是可以解决图片缩放问题。</p>
+<p>所以制作的过程快了很多，不过现在要让视野跟随玩家移动就比较麻烦了。</p>
+<h4 id="摄像机跟随"><a href="#摄像机跟随" class="headerlink" title="摄像机跟随"></a>摄像机跟随</h4><p>虽然无法通过平移摄像机的方式来改变视野，但是反过来可以让 UI 移动，让视野中心一直处于摄像机中间。</p>
+<p>只不过这样移动是把整个游戏的场景进行平移，在性能上远不如移动摄像机。</p>
+<p>所幸小游戏只有一关而且流程不长，所以可以通过这种方法实现视野跟随。</p>
+<p><img src="https://files.catbox.moe/0hi1bp.jpg" alt="游戏场景"></p>
+<p>玩家控制的角色永远都在红色方块的区域，而玩家移动时，背景也跟着相对移动。</p>
+<p>所以视觉上就会变成玩家在向前奔跑的效果。（请回顾高中物理：相对运动）</p>
+<p><img src="https://i.loli.net/2021/05/21/qtQVvwECgB4esiz.jpg" alt="QQ20210521-175501.jpg"></p>
+<p>总的关卡场景由 4 个屏幕组成，最终要留一个屏幕的距离，每一个屏幕的宽度为 1280 像素。</p>
+<p>背景滚动示意图：</p>
+<p><img src="https://i.loli.net/2021/05/21/4K9nYTcLtjJhHyB.jpg" alt="QQ20210521-181226.jpg"></p>
+<h3 id="阻挡玩家前进-后退"><a href="#阻挡玩家前进-后退" class="headerlink" title="阻挡玩家前进/后退"></a>阻挡玩家前进/后退</h3><p>为了避免玩家可以回头或者继续向前走离开屏幕范围，在场景看不见的位置设置两道“空气墙”（白色区域）阻挡玩家行走。</p>
+<p><img src="https://i.loli.net/2021/05/21/ThyaOvPnemfR5AN.jpg" alt="QQ20210521-175947.jpg"></p>
+<p>玩家走到左侧边缘或者右侧边缘的时候，就会被空气墙挡住了。</p>
+<h2 id="销毁物体-敌人-子弹"><a href="#销毁物体-敌人-子弹" class="headerlink" title="销毁物体/敌人/子弹"></a>销毁物体/敌人/子弹</h2><p>由于游戏场景的道具、敌人、子弹会占用内存并且还会处于一直计算的状态（占用 CPU）。</p>
+<p>对于飞出屏幕之外的子弹以及离开屏幕的道具、敌人应该将其销毁，从而释放内存。</p>
+<p><img src="https://i.loli.net/2021/05/21/NeTI1Wa5poL29tU.jpg" alt="QQ20210521-182310.jpg"></p>
+<p>当前场景中有一个看不见的检测区域，当游戏中的物体进入/离开时，就会触发碰撞监听。</p>
+<p>当物体进入的时候，触发激活状态；当物体离开的时候就销毁。</p>
+<p>激活状态对敌人的设定非常有用，只有敌人进入玩家视野的时候才让敌人开始行动，否则就是静止状态。</p>
+<h2 id="关卡设计"><a href="#关卡设计" class="headerlink" title="关卡设计"></a>关卡设计</h2><p>在玩别人制作的游戏时，总觉得玩起来没有违和感。</p>
+<p>但如果自己来设计关卡的话，总觉得各种怪怪的。</p>
+<p>因为只有一关，所以关卡就设计的比较简单，跑图然后进入 BOSS 战，结束。</p>
+<blockquote>
+<p>小插曲：unity 中的 transform.position 获取的是世界坐标，而 transform.localPosition 才是相对于父节点的坐标，如果直接用世界坐标会出现敌人跟着场景运动（即运动的叠加，例如一个人站在高速行驶的火车上向前跑或者回头跑）所以应该只在相对于父节点的位置进行运动</p>
+</blockquote>
+<h3 id="激活敌人"><a href="#激活敌人" class="headerlink" title="激活敌人"></a>激活敌人</h3><p>场景中的敌人在进入视野前不应该能够自由移动。</p>
+<p>也就是说，默认情况下应该让敌人处于“静止”状态，只有进入玩家的视野才“激活”它们。</p>
+<p>做法十分简单，原理与让子弹消失一样。</p>
+<p><img src="https://files.catbox.moe/kpsunj.jpg" alt="区域检测器"></p>
+<p>区域检测器不仅可以用来让离开区域的子弹消失，同样可以检测进入区域的怪物。</p>
+<p>只要怪物进入区域就自动触发激活状态的回调即可。</p>
+<p>屏幕外的敌人处于不动的状态，进入区域之后才变为激活。</p>
+<p>不仅可以节约 CPU 的开销，也可以避免敌人乱蹦乱跳打乱关卡节奏。</p>
+<p>因为是全局的设置，所以最开始抽取的 <code>MiniGame_Enemy</code> 作为敌人的父类方法就可以直接“一键修改”了。</p>
+<p>这就是抽取出父类的好处，后面加入新功能可以节约很多时间。</p>
+<h3 id="教学关卡"><a href="#教学关卡" class="headerlink" title="教学关卡"></a>教学关卡</h3><p>游戏开始时，前面有一小段“教学关卡”。</p>
+<p><img src="https://i.loli.net/2021/05/14/uQUzMJshAFcOERb.jpg" alt="QQ20210514-190224.jpg"></p>
+<p>因为以前的 FC 游戏都是手柄操作的，所以不需要提示按键。</p>
+<p>玩家可以靠自己尝试了解到每一个键的作用。</p>
+<p>为了让玩家知道基本操作，这是游戏中仅有的一次提示。</p>
+<p>前方设置三个樱桃，即使玩家想要跳过也一定会碰到。</p>
+<p>让玩家知道吃到这个东西可以加分。</p>
+<p>接下来右方有一根水管限制玩家继续移动，玩家需要跳过水管或者站在水管上面。</p>
+<p>接着刚好会飘来一只幽灵，让玩家第一次接触战斗。</p>
+<p>教学关键这样就结束了。</p>
+<p>（这个水管的形状以及放置的位置就是致敬以前玩的马里奥 FC 游戏，毕竟 FC 游戏是我们的启蒙）</p>
+<h2 id="BOSS-及关卡流程"><a href="#BOSS-及关卡流程" class="headerlink" title="BOSS 及关卡流程"></a>BOSS 及关卡流程</h2><p>此处省略一万个字……</p>
+<p>本来是打算边写制作过程记录下来的，结果是边修 BUG，边测试……</p>
+<p>因为最开始设计失误导致全部游戏对象都采用了 UI，接着为了让摄像机跟随就要挪动整个游戏场景；</p>
+<p>挪动整个游戏场景意味着地图上的怪物也会跟着挪动，因此需要重新修改怪物的行动方式……</p>
+<p>“将错就错”反而需要花费更多的时间来弥补前面的失误，重新修改的过程心态都快爆炸了。</p>
+<p>如同网上的段子一样，修好了一个 BUG，就会出现另一个新的 BUG，所以那天一整个下午都沉浸在修 BUG 的恐惧。</p>
+<p>所幸还是坚持改完了，剩下一些操作体验的问题以后有时间再修改。</p>
+<blockquote>
+<p>“以后再改”的潜台词就是“不打算改了”——兔(ge)子(zi)语录</p>
+</blockquote>
+<h2 id="游戏剧情"><a href="#游戏剧情" class="headerlink" title="游戏剧情"></a>游戏剧情</h2><p>游戏没有任何文字剧情，最后一个场景是我梦中浮现出来的。</p>
+<p>醒来的时候还记得很清楚，所以就将最后的场景复现出来，与我梦中想象的样子几乎没有差别~</p>
+<p>第一版制作完成之后没有任何剧情，为了弥补这个遗憾就加入了这个场景。</p>
+<p>玩家最后打败布偶 BOSS，会掉落布偶的「真身」。</p>
+<p>女主角返回城里的途中，登场的怪物会跟在身后一起奔跑。</p>
+<p>（布偶 BOSS 是这个地方的头头，当它要离开的时候，所有的怪物都来送它）</p>
+<p>怪物与女主一同奔跑也证明了女主并没有真正的消灭这些怪物。</p>
+<p>它们可能是为了保护头头而阻挡女主，当头头离开时它们依依不舍的紧随身后目送离开。</p>
+<p>最终在快要到达城市的时候，怪物们纷纷离开，因为它们知道自己无法出现在人类面前。</p>
+<p>随后，女主角见到在等着她归来的小女孩，并且将布偶带还给她。</p>
+<p>剧情结束。</p>
+<p>（实际上跟哑剧差不多）</p>
+<p>玩家打败 BOSS 看到真实结局时还将解锁一张 CG 图片。</p>
+<blockquote>
+<p>GalGame 类似的解锁 CG 的设定似乎很不错？！</p>
+</blockquote>
+<p>这张图原本是 Cee 画的 FC 小游戏封面，在游戏中没有适合展示的场景。</p>
+<p>所以就被我放到通关小游戏之后的结尾部分了，挺好的一张 CG，不给玩家看就太可惜了。</p>
+<p>这也是本游戏的第一张 CG 图片，以后可能会有更多。</p>
+<h2 id="素材问题"><a href="#素材问题" class="headerlink" title="素材问题"></a>素材问题</h2><p>由于我们两个人都没有制作音乐的能力，所以我们决定直接使用公开版权的音乐素材。</p>
+<p>游戏是 FC 时代的风格，因此采用 8-Bit 的背景音乐。</p>
+<p>最终选择的是魔王の魂提供的免费版权的素材。</p>
+<p>魔王の魂：<a target="_blank" rel="noopener" href="https://maou.audio/">https://maou.audio/</a></p>
+<p>在小游戏最后场景将以滚动文字的方式注明版权出处。</p>
+<h2 id="演示效果"><a href="#演示效果" class="headerlink" title="演示效果"></a>演示效果</h2><p>最终完成版：<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1Bf4y1h7RE/">https://www.bilibili.com/video/BV1Bf4y1h7RE/</a></p>
+<p>(已投稿至 B 站)</p>
+<h2 id="后言"><a href="#后言" class="headerlink" title="后言"></a>后言</h2><p>中间断更了几天（在摸鱼）</p>
+<p>在闲鱼淘了一个二手的 3DSLL，用来纪念当初逝去的青春~~~</p>
+<p>这几天又沉迷在宝可梦大探险，虽然游戏很坑，但是抵挡不住对宝可梦的热情，结果还是沦陷了，ε=(´ο｀*)))唉！</p>
+<p>网易游戏一直都在挑战我的忍耐力，看看这个宝可梦游戏我能坚持多久。</p>
+<p>但我发誓以后再也不玩网易的游戏了。</p>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">火烧兔子</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://huotuyouxi.com/2021/05/30/monster-game-10/">http://huotuyouxi.com/2021/05/30/monster-game-10/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://huotuyouxi.com">火兔游戏工作室</a>！</span></div></div><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/unity/">unity</a><a class="post-meta__tags" href="/tags/%E5%BC%80%E5%8F%91%E6%8A%80%E6%9C%AF/">开发技术</a></div><nav id="pagination"><div class="next-post pull-right"><a href="/2021/05/12/monster-game-9/"><span>名为怪物的游戏——《星之魔女》FC小游戏移植（EX）</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer class="footer-bg" style="background-image: url(https://i.loli.net/2021/05/02/61DLs9VHetxbq2n.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2020 - 2021 By 火烧兔子</div><div class="framework-info"><span>驱动 - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.9.0"></script><script src="/js/fancybox.js?version=1.9.0"></script><script src="/js/sidebar.js?version=1.9.0"></script><script src="/js/copy.js?version=1.9.0"></script><script src="/js/fireworks.js?version=1.9.0"></script><script src="/js/transition.js?version=1.9.0"></script><script src="/js/scroll.js?version=1.9.0"></script><script src="/js/head.js?version=1.9.0"></script><script src="/js/search/local-search.js"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章"></div></div></div><hr><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a target="_blank" rel="noopener" href="https://github.com/wzpan/hexo-generator-search" style="color:#49B1F5;">hexo-generator-search</a>
+ <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fa fa-times"></i></span></div><div class="search-mask"></div></body></html>
