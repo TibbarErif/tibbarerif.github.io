@@ -4,9 +4,38 @@
   
     
     <entry>
+      <title>代号：宝可梦（二）</title>
+      <link href="2021/06/07/pokemon-like-04/"/>
+      <url>2021/06/07/pokemon-like-04/</url>
+      
+        <content type="html"><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>前天做完了对话系统，今天就可以开始制作开头的剧情了。</p><h1 id="UI-自动本地化"><a href="#UI-自动本地化" class="headerlink" title="UI 自动本地化"></a>UI 自动本地化</h1><p>游戏界面的 UI 如果一个个去转化语言就会增加很多的工作量。</p><p>例如下面这个开头让玩家输入名字的界面，光是 UI 文本就有三个。</p><p><img src="https://files.catbox.moe/c30wfa.jpg" alt="输入名字"></p><p>为了减少无意义的劳动，我写了一个可以自动将关键词转化为本地语言的方法。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">using System.Collections;</span><br><span class="line">using System.Collections.Generic;</span><br><span class="line">using UnityEngine;</span><br><span class="line">using UnityEngine.UI;</span><br><span class="line"></span><br><span class="line">public class LocaleText : MonoBehaviour</span><br><span class="line">&#123;</span><br><span class="line">    private Text text;</span><br><span class="line"></span><br><span class="line">    private void Awake()</span><br><span class="line">    &#123;</span><br><span class="line">        text &#x3D; GetComponent&lt;Text&gt;();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private void Start()</span><br><span class="line">    &#123;</span><br><span class="line">        text.text &#x3D; GameManager.GetLocaleText(text.text);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>只要在文本对象挂上这个脚本，文本就会自动转化为对应的语言了。</p><p>在没改造之前，每一个 UI 界面都要这样：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public Text tipText, placeText, btnText;</span><br><span class="line">public InputField inputField;</span><br><span class="line"></span><br><span class="line">private void Start()</span><br><span class="line">&#123;</span><br><span class="line">    tipText.text &#x3D; GameManager.uiTexts[&quot;inputNameTip&quot;];</span><br><span class="line">    placeText.text &#x3D; GameManager.uiTexts[&quot;inputPlaceholder&quot;];</span><br><span class="line">    btnText.text &#x3D; GameManager.uiTexts[&quot;confirm&quot;];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>改造之后，不需要代码手动本地化。</p><p>只要将文本上面的字符串设置为对应的关键词即可：</p><p><img src="https://files.catbox.moe/lkvpbk.jpg" alt="文本设置为关键词"></p><p>接着把脚本挂在这个文本上：</p><p><img src="https://files.catbox.moe/00mhir.jpg" alt="文本挂上本地化脚本"></p><p>进入游戏测试：</p><p><img src="https://files.catbox.moe/e6cmj9.jpg" alt="测试本地化文本"></p><p>文本上的关键词自动转化成对应的语言文字了！</p><h1 id="弹窗提示"><a href="#弹窗提示" class="headerlink" title="弹窗提示"></a>弹窗提示</h1><p>如果用户输入的名字不合法，需要弹出窗口提示玩家输入不正确。</p><p><img src="https://files.catbox.moe/kxvbfk.jpg" alt="弹窗提示"></p><p>做了一个简易的弹窗 UI。</p><h1 id="按键冲突问题"><a href="#按键冲突问题" class="headerlink" title="按键冲突问题"></a>按键冲突问题</h1><p>因为本游戏是用键盘操作的，所以会存在一个按键冲突的问题。</p><p>比如玩家打开菜单，此时又弹出一个提示框。</p><p>玩家按下方向键菜单还在监听按键，导致出现弹窗前面的窗口还能控制的情况。</p><p><img src="https://files.catbox.moe/2uymmv.jpg" alt="菜单的按键冲突问题"></p><p>正常的情况应该是：当玩家打开背包，主菜单的按键监听先屏蔽，等玩家关闭背包了，操作权才返回主菜单。</p><p>为了避免这种按键冲突问题，需要实现一种特殊的数据结构「栈」。</p><p>栈是一种先进后出的结构，先进来的菜单最后一个关闭，正好符合窗口的设计。</p><h2 id="栈结构"><a href="#栈结构" class="headerlink" title="栈结构"></a>栈结构</h2><p>在全局的 UI 管理类 GameManager 加入栈结构：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">public static Stack windows &#x3D; new Stack();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">public static void PopWindowStack()</span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">    Window temp &#x3D; windows.Pop() as Window;</span><br><span class="line">    Debug.Log(&quot;出栈：&quot; + temp.gameObject.name);</span><br><span class="line"></span><br><span class="line">    if (windows.Count !&#x3D; 0)</span><br><span class="line">    &#123;</span><br><span class="line">        Window lastMenu &#x3D; windows.Pop() as Window;</span><br><span class="line">        lastMenu.SetEnabled();</span><br><span class="line">        windows.Push(lastMenu);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public static void PushWindowStack(Window window)</span><br><span class="line">&#123;</span><br><span class="line">    Debug.Log(&quot;入栈：&quot; + window.gameObject.name);</span><br><span class="line"></span><br><span class="line">    if (windows.Count !&#x3D; 0)</span><br><span class="line">    &#123;</span><br><span class="line">        Window lastMenu &#x3D; windows.Pop() as Window;</span><br><span class="line">        lastMenu.SetDisabled();</span><br><span class="line">        windows.Push(lastMenu);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    window.SetEnabled();</span><br><span class="line">    windows.Push(window);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure><p>这个结构的原理很简单，如下图所示：</p><p><img src="https://files.catbox.moe/0w7boe.jpg" alt="入栈过程"></p><p>当第二个菜单被创建的时候，需要判断栈内是否有其他菜单。</p><p>如果有的话，就取出最后一个，将其设置为未激活状态，然后重新压回栈中。</p><p>再将新创建的菜单激活压入栈内。</p><p><img src="https://files.catbox.moe/ap0djc.jpg" alt="入栈过程2（没有⑤不用找了）"></p><p>出栈的过程同理，就不再“灵魂画图”了。</p><h2 id="菜单基类"><a href="#菜单基类" class="headerlink" title="菜单基类"></a>菜单基类</h2><p>创建一个菜单的基类：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">using System.Collections;</span><br><span class="line">using System.Collections.Generic;</span><br><span class="line">using UnityEngine;</span><br><span class="line"></span><br><span class="line">public class Window : MonoBehaviour</span><br><span class="line">&#123;</span><br><span class="line">    protected bool isEnabled;</span><br><span class="line"></span><br><span class="line">    public void SetEnabled()</span><br><span class="line">    &#123;</span><br><span class="line">        isEnabled &#x3D; true;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void SetDisabled()</span><br><span class="line">    &#123;</span><br><span class="line">        isEnabled &#x3D; false;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private void OnEnable()</span><br><span class="line">    &#123;</span><br><span class="line">        GameManager.PushWindowStack(this);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private void OnDestroy()</span><br><span class="line">    &#123;</span><br><span class="line">        GameManager.PopWindowStack();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>这里直接使用 Unity 的生命周期函数 <code>OnEnable</code> 和 <code>OnDestroy</code> 来控制控制入栈和出栈。</p><p>这样可以不用手动去控制进出栈，减少工作量。</p><p>当一个菜单被激活时就会自动入栈，当它被销毁时就会自动出栈，全自动化的处理，十分方便。</p><p>不仅是弹窗要继承窗口类，包括之前设计的对话系统也要让它继承窗口类。</p><p><code>isEnabled</code> 用来控制是否激活菜单的按键控制，在子类中用来控制是否允许按键操作。</p><h2 id="实际测试"><a href="#实际测试" class="headerlink" title="实际测试"></a>实际测试</h2><p>写好之后，进入游戏测试一下。</p><p>先执行一段对话，然后隔 1 秒的时候出现一个弹窗。</p><p>如果没有栈结构，那么在对话和弹窗同时存在的情况下，按 Z 键时，对话会执行下一句，而弹窗也会消失。</p><p>（即按键的监听没有被屏蔽，导致两个窗口可以同时操作）</p><p>如果有栈的结构，那么在对话还未结束时又弹出一个弹窗，此时若按下 Z 键，会优先关闭弹窗，再按下 Z 键才会使对话进入下一句。</p><p><img src="https://files.catbox.moe/pqzt5p.gif" alt="菜单的执行顺序"></p><p>测试结果没问题，这样菜单按键冲突问题也解决了。</p><h1 id="宝可梦经典开头"><a href="#宝可梦经典开头" class="headerlink" title="宝可梦经典开头"></a>宝可梦经典开头</h1><p>宝可梦系列的开头经常是一个博士出来欢迎，然后随手丢一个精灵。</p><p><img src="https://files.catbox.moe/8rtdlx.jpg" alt="宝可梦经典开头"></p><p>仿照原作，我自己用 PS 弄了一张渐变的背景。</p><p><img src="https://files.catbox.moe/s76tjd.jpg" alt="博士的背景"></p><p>导入游戏场景测试一下：</p><p><img src="https://files.catbox.moe/bppmzx.jpg" alt="场景测试"></p><p>看上去有那么回事了，由于现在还在练习像素画的过程，博士的素材暂时没法完成。</p><p>此处先用黑色图块代替。</p><p>前天顺便也找了对话框的 UI，风格有点不适合游戏，后面再自己做一个新的。</p><h1 id="后言"><a href="#后言" class="headerlink" title="后言"></a>后言</h1><p>昨天感冒了，这篇文章本来是要 6-6 的时候发布的，结果拖到了今天。</p><p>目前个人感觉状态十分良好，只要不出什么意外情况，这个宝可梦的游戏在这个月应该就可以出 Demo 版了。<br>（迷之自信）</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 代号：宝可梦 </category>
+          
+          <category> 制作过程 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> unity </tag>
+            
+            <tag> 开发技术 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>代号：宝可梦（一）</title>
-      <link href="2021/06/05/like-pokemon-03/"/>
-      <url>2021/06/05/like-pokemon-03/</url>
+      <link href="2021/06/05/pokemon-like-03/"/>
+      <url>2021/06/05/pokemon-like-03/</url>
       
         <content type="html"><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>宝可梦同人游戏正式开始制作。</p><p>与怪物游戏同时进行开发，由于许多系统是类似的，所以完成其中一个再改造一下另一个游戏也能使用。</p><p>想过用 RPG Maker 来制作这个游戏。</p><p>自己从零开始写系统要花费好几倍的精力……</p><p>想到原创系统的梦想，还是咬咬牙坚持下去吧。</p><h1 id="对话系统"><a href="#对话系统" class="headerlink" title="对话系统"></a>对话系统</h1><p>昨天晚上就做好了对话系统，但是 UI 还没做。</p><p><img src="https://files.catbox.moe/35k8kn.gif" alt="对话系统"></p><p>虽然功能完成了，但还不能直接使用。</p><p><img src="https://files.catbox.moe/f39ii6.jpg" alt="对话系统代码"></p><p>现在还只是纯代码的形式，每一句话都要写一段代码。</p><p>为了简化工作，对话要做成配置表或者文本形式。</p><p>因为宝可梦的对话系统比较简单，不用配置头像，所以我选择最简单的文本形式作为对话系统的数据存储。</p><p><img src="https://files.catbox.moe/3jjq7n.jpg" alt="对话文本"></p><p>这个对话系统的数据存储也是想了好久才决定用这种形式。</p><p>第一是要直观的看出对话内容，第二是要方便设置和修改。</p><p>用 excel 虽然可以实现更加复杂的对话系统，但是配置对话文本花的时间也会翻倍。</p><p>按照目前的情况时间并不充裕，我要在最短的时间把游戏赶制出来，选择简单文本是最佳方案。</p><h1 id="选项系统"><a href="#选项系统" class="headerlink" title="选项系统"></a>选项系统</h1><p>要让剧情连贯起来不是一件容易的事情。</p><p>所以我的第一步计划是不用连贯的方法，而是分开实现各个系统。</p><p>假如有一个场景是一个 NPC 跑过来跟玩家对话，然后问了玩家一个问题，要让玩家做出二选一，选完之后 NPC 就会离开。</p><p>这个情景看起来很简单，但是要连贯起来是非常困难的。</p><p>在一些大游戏会专门设计一个可视化剧情系统来完成整个剧情动画。</p><p>但是我现在的状况不允许慢悠悠的去做一套剧情系统，相反如果不用连贯的方式来实现就会简单得多。</p><p>比如对话完了要调出一个选项，那就先结束对话，接着创建一个选项，玩家选择完之后，再重新调用下一段的对话。</p><p>理论上可以实现剧情系统的连贯，但是得花好多时间去完成一整套的剧情系统。</p><p>缺点是代码会有很多层嵌套，玩家层面感知不到，所以没关系。</p><p>能用人力解决的，就先用人力代替吧，节省时间。</p><p><img src="https://files.catbox.moe/9dsndy.gif" alt="选项系统"></p><p>选项系统和对话系统是分开的，因此在一个剧情对话中，需要把一段原本完整的剧情分割成多个。</p><p>这也是比较麻烦的地方，但还好问题不大。</p><h1 id="联动效果"><a href="#联动效果" class="headerlink" title="联动效果"></a>联动效果</h1><p>为了方便调用，创建对话和选项的方法要封装起来。</p><p>创建一个 GameManager 游戏管理类，用于调用一些通用的方法。</p><p><img src="https://files.catbox.moe/fid6fp.jpg" alt="封装方法"></p><p>然后试着写一下对话和选项的联动实现剧情的代码实现。</p><p><img src="https://files.catbox.moe/si4hkc.jpg" alt="对话和选项联动的代码"></p><p>如果剧情对话的分支比较多的话，就比较蛋疼了……</p><p>测试结果：</p><p><img src="https://files.catbox.moe/ysobfs.gif" alt="剧情对话和选项的联动"></p><p>看起来是没啥问题了，但代码写起来不是很优雅。</p><p>而且在创建选项的时候，这里的文字是没有本地化语言处理的：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"> private void Select()</span><br><span class="line">&#123;</span><br><span class="line">    List&lt;OptionData&gt; optionDatas &#x3D; new List&lt;OptionData&gt;();</span><br><span class="line"></span><br><span class="line">    optionDatas.Add(new OptionData</span><br><span class="line">    &#123;</span><br><span class="line">        text &#x3D; &quot;男孩&quot;,</span><br><span class="line">        callback &#x3D; Dialog_2</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    optionDatas.Add(new OptionData</span><br><span class="line">    &#123;</span><br><span class="line">        text &#x3D; &quot;女孩&quot;,</span><br><span class="line">        callback &#x3D; Dialog_3</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    GameManager.CallSelectPanel(optionDatas);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>目前游戏有两种语言：简体中文和繁体中文。</p><p>如果这样写死代码的话，就没办法实现多语言了。</p><blockquote><p>有时候真的想去游戏公司实习一下，看看别人是怎么做的，网上几乎找不到相关的教程，经常卡到头大</p></blockquote><p>要保证能够多语言化，这里的选项文字就得提取出来。</p><p>所以我决定单独把 UI 的文本提取成一个 TXT 文件。</p><h1 id="UI-文本"><a href="#UI-文本" class="headerlink" title="UI 文本"></a>UI 文本</h1><p>创建一个本地化文本 ui.txt：</p><p><img src="https://files.catbox.moe/m6f6gc.jpg" alt="ui.txt"></p><p>这个文件保存了界面 UI 上的文字和对话选项的文字。</p><p>UI 文本需要在游戏启动时进行加载。</p><p>创建一个 Loading 场景加载资源，加载完成后即跳转到测试场景。</p><p>在 GameManager 里用一个静态变量保存所有 UI 文本。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">public class GameManager : MonoBehaviour</span><br><span class="line">&#123;</span><br><span class="line">    public static Dictionary&lt;string, string&gt; uiTexts &#x3D; new Dictionary&lt;string, string&gt;();</span><br><span class="line"></span><br><span class="line">    public static void LoadLocaleSetting()</span><br><span class="line">    &#123;</span><br><span class="line">        string lang &#x3D; &quot;zh-cn&quot;;</span><br><span class="line">        TextAsset uiText &#x3D; Resources.Load(&quot;Locale&#x2F;&quot; + lang + &quot;&#x2F;common&#x2F;ui&quot;) as TextAsset;</span><br><span class="line">        string[] data &#x3D; uiText.text.Split(Environment.NewLine.ToCharArray());</span><br><span class="line"></span><br><span class="line">        foreach (string item in data)</span><br><span class="line">        &#123;</span><br><span class="line">            if (item !&#x3D; &quot;&quot;)</span><br><span class="line">            &#123;</span><br><span class="line">                string[] res &#x3D; item.Split(&#39;&#x3D;&#39;);</span><br><span class="line">                uiTexts.Add(res[0], res[1]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>并且提供了一个加载资源的方法。</p><p>这样文本就会全部载入到静态变量中，全局都可以调用。</p><h1 id="选项本地化"><a href="#选项本地化" class="headerlink" title="选项本地化"></a>选项本地化</h1><p>修改之前生成选项的方法：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">private void Select()</span><br><span class="line">&#123;</span><br><span class="line">    List&lt;OptionData&gt; optionDatas &#x3D; new List&lt;OptionData&gt;();</span><br><span class="line"></span><br><span class="line">    optionDatas.Add(new OptionData</span><br><span class="line">    &#123;</span><br><span class="line">        text &#x3D; &quot;boy&quot;,</span><br><span class="line">        callback &#x3D; Dialog_2</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    optionDatas.Add(new OptionData</span><br><span class="line">    &#123;</span><br><span class="line">        text &#x3D; &quot;girl&quot;,</span><br><span class="line">        callback &#x3D; Dialog_3</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    GameManager.CallSelectPanel(optionDatas);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>这里只要传入 UI 文本中等号左边的 key（键名）就可以。</p><p>boy 和 girl 是在 ui.txt 文本中定义的。</p><p>只要传入这个键名，就会转化成对应的键值：男孩和女孩。</p><p>最后在选项数据里加一个将 key 转化为对应文本的方法即可：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public class OptionData</span><br><span class="line">&#123;</span><br><span class="line">    public string text;</span><br><span class="line">    public System.Action callback;</span><br><span class="line"></span><br><span class="line">    public string GetText()</span><br><span class="line">    &#123;</span><br><span class="line">        GameManager.uiTexts.TryGetValue(text, out string value);</span><br><span class="line">        return value;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>测试一下大功告成~</p><p>这样看起来舒服多了~</p>]]></content>
       
@@ -22,9 +51,9 @@
       
         <tags>
             
-            <tag> 开发技术 </tag>
-            
             <tag> unity </tag>
+            
+            <tag> 开发技术 </tag>
             
         </tags>
       
@@ -34,8 +63,8 @@
     
     <entry>
       <title>宝可梦游戏室内地图绘制学习</title>
-      <link href="2021/06/04/like-pokemon-02/"/>
-      <url>2021/06/04/like-pokemon-02/</url>
+      <link href="2021/06/04/pokemon-like-02/"/>
+      <url>2021/06/04/pokemon-like-02/</url>
       
         <content type="html"><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>宝可梦游戏的室内地图都很小巧精致。</p><p>为了制作宝可梦同人，绘制自己的场景地图，需要学习一下宝可梦风格的房子有什么特征。</p><h1 id="单间房子"><a href="#单间房子" class="headerlink" title="单间房子"></a>单间房子</h1><p><img src="https://files.catbox.moe/4ctqor.jpg" alt="单间"><br><img src="https://files.catbox.moe/x2l3f6.jpg" alt="单间"></p><h1 id="隔间房子"><a href="#隔间房子" class="headerlink" title="隔间房子"></a>隔间房子</h1><p>如果房子比较大，就会用墙壁分割成多间小房子。</p><p><img src="https://files.catbox.moe/j9bt4c.jpg" alt="多间"></p><h1 id="风格总结"><a href="#风格总结" class="headerlink" title="风格总结"></a>风格总结</h1><p>宝可梦室内地图都很小巧，掌机屏幕不大所以设计成小房子没什么奇怪的。</p><p>但是观察之后发现可能并不是因为这个原因。</p><p><img src="https://files.catbox.moe/q6hi8v.jpg" alt="实际的场景大小"></p><p>在本来就不大的掌机屏幕，宝可梦公司并没有最大程度的利用屏幕空间。</p><p>反而是把空间进一步的压缩，可以发现所有室内地图周围都有黑边。</p><p>也许是日本那边比较喜欢小的房间，所以将游戏中的房子也设计成小房间。</p><p>房间小还有几个优点：</p><p>① 看起来更加精致</p><p>宝可梦是 Q 版风格，小巧的房间显得更加精致。</p><p>② 减少玩家跑图距离</p><p>避免玩家因为跑图而浪费太多时间。</p><p>在房间里不能骑自行车，所以太远的距离会影响玩家的体验。</p><p>宝可梦公司在掌机屏幕已经很局限的情况下，再将房间进一步的进行压缩，这种设计有点大胆~</p><p>另外，仔细观察不难发现几乎家家户户的边角都有这种植物和电视机。</p><p><img src="https://files.catbox.moe/f3x0vy.jpg" alt="植物和电视机"></p><p>此外，所有的出口都有地毯作为标志物。</p><p><img src="https://files.catbox.moe/mnn1gt.jpg" alt="地毯"></p><p>看到地毯就知道这是房间的出口。</p><p>最后，所有的房间几乎都有窗户（正面）。</p><p><img src="https://files.catbox.moe/x2p3zx.jpg" alt="窗户"></p><h1 id="设计要点"><a href="#设计要点" class="headerlink" title="设计要点"></a>设计要点</h1><p>总结出宝可梦室内房间风格之后，不难发现有几个特征。</p><ul><li>空间很小</li><li>周围有黑边</li><li>有电视剧、植物等常见室内摆设</li><li>出口出有地毯</li><li>正面看得见窗户</li></ul><p>那么根据这些特征设计房间就能有“宝可梦”的味道了！</p><h1 id="第一版"><a href="#第一版" class="headerlink" title="第一版"></a>第一版</h1><p>这是未总结宝可梦风格之前设计的室内地图。</p><p><img src="https://files.catbox.moe/t9chba.jpg" alt="第一版"></p><p>场景的像素为 640*480。</p><p>因为没有使用黑边，所以看起来有点空旷。</p><p>明显可以感觉到左下角和右上角的这两个部分有点“空”。</p><p><img src="https://files.catbox.moe/e9vklw.jpg" alt="空空如也"></p><p>墙壁看不见窗户，有一种密闭感会让人觉得透不过气。</p><h1 id="第二版"><a href="#第二版" class="headerlink" title="第二版"></a>第二版</h1><p>在保证基本布局不变的情况下，将此房间改造成“宝可梦风”。</p><h2 id="缩小房间面积"><a href="#缩小房间面积" class="headerlink" title="缩小房间面积"></a>缩小房间面积</h2><p>空间不需要占满，周围用黑边代替。</p><p>将整个房间压缩到一个很精致小巧的大小。</p><p>第一步，绘制地板和墙壁，房间的面积大幅缩减，周围用黑边代替。</p><p><img src="https://files.catbox.moe/da4bmc.jpg" alt="黑边和地板、墙壁"></p><h2 id="出口处放置地毯"><a href="#出口处放置地毯" class="headerlink" title="出口处放置地毯"></a>出口处放置地毯</h2><p><img src="https://files.catbox.moe/e5un5m.jpg" alt="放置地毯"></p><h2 id="摆放房屋物件"><a href="#摆放房屋物件" class="headerlink" title="摆放房屋物件"></a>摆放房屋物件</h2><p>这是一间卧室，所以有床、书柜和桌子等基本物件。</p><p><img src="https://files.catbox.moe/2yrb9i.jpg" alt="基本家具"></p><h2 id="装饰物"><a href="#装饰物" class="headerlink" title="装饰物"></a>装饰物</h2><p>家具有了，已经具备了一个普通房间的基本标准。</p><p>但这个房间没有什么特色，因此接下来摆放一些装饰物来点缀房间。</p><p>给地板铺上毛绒毯子，还有地上随处乱扔的抱枕，再加点猫脚印填补下方的空白。</p><p><img src="https://files.catbox.moe/539gid.jpg" alt="装饰物"></p><p>墙壁有点空，再贴上海报和蝴蝶挂画。</p><p><img src="https://files.catbox.moe/xb1f6n.jpg" alt="墙壁装饰物"></p><h2 id="窗户"><a href="#窗户" class="headerlink" title="窗户"></a>窗户</h2><p>没有窗户会产生密闭感，会让人觉得很压迫。</p><p>这里既可以直接用窗户，也可以用窗帘，都能产生相同的效果。</p><p>（发现植物盆子底下少了一块，趁机补上）</p><p><img src="https://files.catbox.moe/gtpfgo.jpg" alt="窗户"></p><p>这间屋子是典型的少女房间，一般都会拉上窗帘。</p><p>当然用正方形格子的窗户也是可以的。</p><h1 id="两版对比"><a href="#两版对比" class="headerlink" title="两版对比"></a>两版对比</h1><p>改进版虽然左下角没有放装饰物，但看起来却不会那么空旷。</p><p>右上角原本空空的地方已经变成很自然了。</p><p><img src="https://files.catbox.moe/qec56k.jpg" alt="左下角部分"></p><p>左下角还可以再放个毛绒熊的布娃娃填补空白。</p><p>但是留白的地方还是很重要的，太多的装饰物看起来反而会让人眼花缭乱。</p><p>再加上压缩了房间的面积，要素过多就会变得杂乱不堪。</p><p>左右下角两边各有猫脚印的坐垫，好似猫走过的痕迹。</p><p><img src="https://files.catbox.moe/yhzol5.jpg" alt="猫走过的痕迹"></p><p>两边对称的摆设让人看起来会很舒服~</p><p>正中间的地方再放一个猫型抱枕，起到点题的作用。</p><p>因此这间房间就是「猫主题的少女房间」。</p><p><img src="https://files.catbox.moe/n7wxd5.jpg" alt="猫主题少女房间"></p><h1 id="素材来源"><a href="#素材来源" class="headerlink" title="素材来源"></a>素材来源</h1><p>本文演示用的地图块素材来源如下：</p><p><a href="https://rpg.blue/thread-485281-1-1.html">by loffid</a><br><a href="http://www.rpgtuzi.com/?id=35">by  rpgtuzi</a></p>]]></content>
       
@@ -59,8 +88,8 @@
     
     <entry>
       <title>代号：宝可梦</title>
-      <link href="2021/06/02/like-pokemon-01/"/>
-      <url>2021/06/02/like-pokemon-01/</url>
+      <link href="2021/06/02/pokemon-like-01/"/>
+      <url>2021/06/02/pokemon-like-01/</url>
       
         <content type="html"><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>小学的时候放学就直奔回家，为了防止错过宝可梦无印篇。</p><p>因为没有办法入手 GB、GBA 等掌机，所以没机会接触到口袋妖怪。</p><p>唯一的童年回忆就是无印篇的动画版了。</p><p>直到初中以后，家里买了电脑，所以开始搜索宝可梦相关的游戏。</p><p>最开始是找到魔兽世界的宝可梦地图，但很遗憾不会用。</p><p>接着无意中搜索了宝可梦的图片（可能是想找壁纸什么的）。</p><p>看到一张图片下面有水印“66RPG”，机缘巧合的打开了新世界的大门。</p><p>估计是某人用 RPG Maker XP 自制的宝可梦同人游戏。</p><p>我期待的下载下来试玩，我还记得只有一场战斗对阵化石翼龙。</p><p>打完就结束了。</p><p>回合制的战斗外加很不错的连击系统，打击感比起正统的宝可梦游戏强得多。</p><p>然后开始逛 6R 的论坛，发现原来这里是一个游戏制作者论坛。</p><p>后面就很奇妙的下载了 RPG Maker XP，开始了游戏制作之旅。</p><p>再后面的话，对电脑的操作技术也越来越熟练了。</p><p>知道原来可以用模拟器启动口袋妖怪游戏，最初玩的是口袋妖怪：钻石。</p><p>后面又玩了白金。</p><p>不知道从哪里发现了一个国产的口袋妖怪在线对战软件 PBO。</p><p>可以自由组合搭配队伍与其他玩家对战。</p><p>但是 PBO 的网络不稳定，经常无法联机。</p><p>然后又不知道从哪里下载了老外的 PBO，可以与全世界的人进行对战。</p><p>玩的不亦乐乎！</p><p>又玩了 GBA 的绿宝石、火红叶绿。</p><p>然后就在电脑上启动两个模拟器，左边是我，右边是 cee，两个人一起玩绿宝石。</p><p>模拟器还可以进行联机对战，我们就在屏幕中间用胶布粘了一个纸板，防止对战的时候偷看。</p><p>可以说宝可梦游戏给我们带来了很多的欢乐。</p><h1 id="最初的梦想"><a href="#最初的梦想" class="headerlink" title="最初的梦想"></a>最初的梦想</h1><p>最初我们是为了寻找口袋妖怪游戏，误打误撞进入了 6R 论坛。</p><p>接触了 RPG Maker 制作工具，当时就想自己做一款宝可梦的同人。</p><p>但是可惜宝可梦的系统没办法实现，后面就不了了之了。</p><p>现在已经有能力原创系统了，所以打算重拾梦想。</p><h1 id="制作计划"><a href="#制作计划" class="headerlink" title="制作计划"></a>制作计划</h1><p>为了避免与《名为怪物的游戏》制作产生冲突。</p><p>这个游戏将会是我个人进行开发，两个游戏同时开发。</p><p>虽然说是宝可梦的同人，但是宝可梦公司是严令禁止二次创作的。</p><p>所以我不会直接使用宝可梦相关的素材，沿用的是宝可梦的世界观和背景、系统。</p><p>当然，并不是单纯的复刻宝可梦，那样没什么意义。</p><p>我想做的是融入自己想法的宝可梦游戏，所以会有一定程度的魔改。</p><p>素材也将从零开始自学像素画完成。</p><p>在制作初期会使用口袋妖怪绿宝石的素材临时替代。</p><h1 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h1><p>初步计划是做到第三个道馆的剧情。</p><p>预计在今年发布 Demo 版。</p><p>目标是登录 Steam 发售。</p><p>同时发布免费的体验版在 QQ 群以及本博客。</p><p>如果能顺利完成，将会保持更新直至完结为止。</p>]]></content>
       
@@ -159,9 +188,9 @@
       
         <tags>
             
-            <tag> 开发技术 </tag>
-            
             <tag> unity </tag>
+            
+            <tag> 开发技术 </tag>
             
         </tags>
       
@@ -188,9 +217,9 @@
       
         <tags>
             
-            <tag> 开发技术 </tag>
-            
             <tag> unity </tag>
+            
+            <tag> 开发技术 </tag>
             
         </tags>
       
@@ -217,9 +246,9 @@
       
         <tags>
             
-            <tag> 开发技术 </tag>
-            
             <tag> unity </tag>
+            
+            <tag> 开发技术 </tag>
             
         </tags>
       
@@ -246,9 +275,9 @@
       
         <tags>
             
-            <tag> 开发技术 </tag>
-            
             <tag> unity </tag>
+            
+            <tag> 开发技术 </tag>
             
         </tags>
       
@@ -275,9 +304,9 @@
       
         <tags>
             
-            <tag> 开发技术 </tag>
-            
             <tag> unity </tag>
+            
+            <tag> 开发技术 </tag>
             
         </tags>
       
@@ -304,9 +333,9 @@
       
         <tags>
             
-            <tag> 开发技术 </tag>
-            
             <tag> unity </tag>
+            
+            <tag> 开发技术 </tag>
             
         </tags>
       
@@ -333,9 +362,9 @@
       
         <tags>
             
-            <tag> 开发技术 </tag>
-            
             <tag> unity </tag>
+            
+            <tag> 开发技术 </tag>
             
         </tags>
       
@@ -362,9 +391,9 @@
       
         <tags>
             
-            <tag> 开发技术 </tag>
-            
             <tag> unity </tag>
+            
+            <tag> 开发技术 </tag>
             
         </tags>
       
@@ -391,9 +420,9 @@
       
         <tags>
             
-            <tag> 开发技术 </tag>
-            
             <tag> unity </tag>
+            
+            <tag> 开发技术 </tag>
             
         </tags>
       
@@ -420,9 +449,9 @@
       
         <tags>
             
-            <tag> 开发技术 </tag>
-            
             <tag> unity </tag>
+            
+            <tag> 开发技术 </tag>
             
         </tags>
       
