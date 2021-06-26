@@ -12,10 +12,28 @@ categories:
 本次更新衔接了之前的 FC 小游戏篇，进入到游戏的正式篇（序章部分）。
 序章讲述了主角 Ace 与女主角瞳相遇，并且进入到「Monster」之前的故事。
 
-# Demo（演示版）
+# Demo 下载
+此处为演示版的下载，请优先选择最新版，即版本号比较高的下载。
+如果测试过程遇到 BUG，请联系 QQ：874811226 反馈。
 
+## v0.3.1
+6月26日更新。
+
+Windows 版：[点击下载](https://files.catbox.moe/sxmmeh.zip)
+Mac 版：[点击下载](https://files.catbox.moe/jxu9mc.zip)
+
+更新说明：
+- 修复对话角标不动问题
+- 减少部分调查事件对话内容
+- 修复对话框可能在不同分辨率显示不全问题
+
+> 经过测试 Windows 10 发现了对话卡死问题（非必现问题）如果遇到这种情况请联系 QQ：874811226 反馈。
+
+## v0.3.0
 本地下载：[点击下载](https://files.catbox.moe/csz8hh.zip)
 百度云：[https://pan.baidu.com/s/18ALimW9GmS8UXlqhpRdd_g](https://pan.baidu.com/s/18ALimW9GmS8UXlqhpRdd_g) 提取码：s5co
+
+请下载最新版。
 
 # 更新说明
 目前的 Demo 版使用的素材均为临时素材，部分图片是草图甚至缺了一张 CG 用文字代替了。
