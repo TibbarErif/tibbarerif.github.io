@@ -5,6 +5,31 @@
     
     <entry>
       <title>《名为怪物的游戏》ver1.0.0（前半部分）</title>
+      <link href="2021/07/01/monster-game-version-100-1/"/>
+      <url>2021/07/01/monster-game-version-100-1/</url>
+      
+        <content type="html"><![CDATA[<h2 id="7月计划"><a href="#7月计划" class="headerlink" title="7月计划"></a>7月计划</h2><p>本月将完成第一章的剧情并且在 8 月 1 日发布测试版。</p><h2 id="更新记录"><a href="#更新记录" class="headerlink" title="更新记录"></a>更新记录</h2><h3 id="7月1日"><a href="#7月1日" class="headerlink" title="7月1日"></a>7月1日</h3><ul><li>战斗状态窗口更新角色数据</li><li>战斗状态的 HP/SP 条</li><li>血条/攻击条/SP 条重置</li></ul><p><strong>血条重置</strong><br>设计血条的时候没计划好，一部分是 UI（角色状态），一部分是精灵（敌人血条）。<br>然后现在要把这两个整合在一起，就重写了基本方法，兼容两种的存在。<br>都是因为没计划好的锅，一顿折腾血条系统竟然重写了三遍……</p><p><strong>做了两件傻事</strong><br>晚上又因为两件很傻的事情浪费了时间……</p><p>第一件事是在网上买东西，我都已经付款了，结果对方突然说不卖了，原因是有人出更高的价格来买……<br>我十分讨厌不守信用的人，所以就和他争执了起来。<br>事后……好像一点意义也没有，心情不仅变差了，还浪费了大把时间。</p><p>第二件事是某个客户注册的时候忘记账号和密码了……没错，刚注册就忘！<br>原本我打算专心做游戏，不再管副业。<br>但对方是个雄性（♂）嘤嘤怪，不回消息就嘤嘤嘤。<br>当客服又不能不回，只好陪他尬聊直到满意为止。</p><p>再让我遇到嘤嘤怪，果断重拳出击！！</p><p><strong>反思时间</strong><br>因为两件傻事，晚上大好的时间白白浪费了。<br>应该好好反思一下了……</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 名为怪物的游戏 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 最新进度 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>《名为怪物的游戏》ver1.0.0（前半部分）</title>
       <link href="2021/06/24/monster-game-version-100/"/>
       <url>2021/06/24/monster-game-version-100/</url>
       
